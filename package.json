@@ -1,5 +1,5 @@
 {
- "name": "@payfunc/cryptly",
+ "name": "cryptly",
  "version": "0.0.1",
  "description": "Fullstack encryption library.",
  "author": "PayFunc",
