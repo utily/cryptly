@@ -1,6 +1,6 @@
 {
  "name": "@payfunc/cryptly",
- "version": "0.0.0",
+ "version": "0.0.1",
  "description": "Fullstack encryption library.",
  "author": "PayFunc",
  "license": "MIT",
