@@ -4,8 +4,15 @@
  "description": "Fullstack encryption library.",
  "author": "PayFunc",
  "license": "MIT",
+ "repository": {
+	"type": "git",
+	"url": "git+https://github.com/payfunc/cryptly"
+ },
+ "bugs": {
+	"url": "https://github.com/payfunc/cryptly/issues"
+ },
+ "homepage": "https://payfunc.com/open-source/cryptly",
  "private": false,
- "repository": "https://github.com/payfunc/cryptly",
  "main": "dist/index.js",
  "typings": "dist/index.d.ts",
  "browser": {
