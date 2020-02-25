@@ -4,8 +4,15 @@
  "description": "Fullstack encryption library.",
  "author": "PayFunc",
  "license": "MIT",
+ "repository": {
+  "type": "git",
+  "url": "git+https://github.com/payfunc/cryptly"
+ },
+ "bugs": {
+  "url": "https://github.com/payfunc/cryptly/issues"
+ },
+ "homepage": "https://payfunc.com/open-source/cryptly",
  "private": false,
- "repository": "https://github.com/payfunc/cryptly",
  "main": "dist/index.js",
  "typings": "dist/index.d.ts",
  "browser": {
@@ -50,14 +57,14 @@
   "node-webcrypto-ossl": "^1.0.48"
  },
  "devDependencies": {
-  "@types/jest": "^24.0.23",
-  "@types/node": "^12.12.14",
+  "@types/jest": "^25.1.2",
+  "@types/node": "^13.7.1",
   "babel-core": "^6.26.3",
-  "babel-jest": "^24.9.0",
-  "jest": "^24",
-  "ts-jest": "^24.2.0",
-  "tslint": "^5.20.1",
-  "typescript": "^3.7.3",
+  "babel-jest": "^25.1.0",
+  "jest": "^25",
+  "ts-jest": "^25.2.0",
+  "tslint": "^6.0.0",
+  "typescript": "^3.7.5",
   "watch": "^1.0.2"
  }
 }
