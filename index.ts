@@ -4,5 +4,6 @@ import { Encrypted } from "./Encrypted"
 import { TextDecoder } from "./TextDecoder"
 import { TextEncoder } from "./TextEncoder"
 import { Identifier } from "./Identifier"
+import { Signer } from "./Signer"
 
-export { Algorithm, Base64, Encrypted, Identifier, TextDecoder, TextEncoder }
+export { Algorithm, Base64, Encrypted, Identifier, Signer, TextDecoder, TextEncoder }
