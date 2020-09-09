@@ -1,14 +1,17 @@
-import { Base } from "./Base"
-import { HMAC } from "./HMAC"
-import { RSA } from "./RSA"
 import { Algorithm as SignerAlgorithm } from "./Algorithm"
+import { Base } from "./Base"
 import { Hash as SignerHash } from "./Hash"
+import { HMAC } from "./HMAC"
+import { None } from "./None"
+import { RSA } from "./RSA"
 
 export type Signer = Base
 
 export namespace Signer {
 	export type Algorithm = SignerAlgorithm
 	export type Hash = SignerHash
+
+	export function create(algorithm: "None"): Signer
 	export function create(algorithm: "HMAC", hash: SignerHash, key: string | Uint8Array): Signer
 	export function create(
 		algorithm: "RSA",
@@ -16,15 +19,23 @@ export namespace Signer {
 		publicKey: string | Uint8Array | undefined,
 		privateKey: string | Uint8Array
 	): Signer
-	export function create(algorithm: SignerAlgorithm, hash: SignerHash, ...keys: (string | Uint8Array)[]): Signer {
-		let result: Signer
+	export function create(
+		algorithm: SignerAlgorithm | "None",
+		hash?: SignerHash | undefined,
+		...keys: (string | Uint8Array)[]
+	): Signer | undefined {
+		let result: Signer | undefined
 		switch (algorithm) {
 			case "HMAC":
-				result = new HMAC(hash, keys[0])
+				if (hash != undefined)
+					result = new HMAC(hash, keys[0])
 				break
 			case "RSA":
-				result = new RSA(hash, keys[0], keys[1])
+				if (hash != undefined)
+					result = new RSA(hash, keys[0], keys[1])
 				break
+			case "None":
+				result = new None()
 		}
 		return result
 	}
