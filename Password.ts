@@ -1,7 +1,6 @@
 export type Password = string | Password.Hash
 import * as Base64 from "./Base64"
 import { crypto } from "./crypto"
-import { Signer } from "./Signer"
 
 export namespace Password {
 	export function is(value: any | Password): value is Password {
@@ -10,7 +9,11 @@ export namespace Password {
 			(typeof value == "object" && typeof value.hash == "string" && typeof value.salt == "string")
 		)
 	}
-	export async function hash(algorithm: Signer, password: string, salt?: string): Promise<Hash> {
+	export async function hash(
+		algorithm: { sign: (data: string) => Promise<string> },
+		password: string,
+		salt?: string
+	): Promise<Hash> {
 		if (!salt)
 			salt = Base64.encode(crypto.getRandomValues(new Uint8Array(64)))
 		return {
@@ -18,7 +21,11 @@ export namespace Password {
 			salt,
 		}
 	}
-	export async function verify(algorithm: Signer, hash: Hash, password: string): Promise<boolean> {
+	export async function verify(
+		algorithm: { sign: (data: string) => Promise<string> },
+		hash: Hash,
+		password: string
+	): Promise<boolean> {
 		return (await Password.hash(algorithm, password, hash.salt)).hash == hash.hash
 	}
 	export interface Hash {
