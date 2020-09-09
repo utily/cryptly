@@ -1,7 +1,7 @@
 import { crypto } from "../crypto"
 import * as Base64 from "../Base64"
-import { Symmetric } from "./Symmetric"
 import { Hash } from "./Hash"
+import { Symmetric } from "./Symmetric"
 
 export class HMAC extends Symmetric {
 	private key: PromiseLike<CryptoKey>

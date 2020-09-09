@@ -1,5 +1,5 @@
-import { Signer } from "./index"
 import { Identifier } from "../Identifier"
+import { Signer } from "./index"
 
 describe("Algorithm.RS256", () => {
 	const privateKey =

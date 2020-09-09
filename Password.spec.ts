@@ -1,5 +1,4 @@
-import { Password } from "./Password"
-import { Signer } from "./Signer"
+import * as cryptly from "./index"
 
 describe("Password", () => {
 	const hash = {
@@ -7,9 +6,13 @@ describe("Password", () => {
 		salt: "salt",
 	}
 	it("hash", async () => {
-		expect(await Password.hash(Signer.create("HMAC", "SHA-512", "secret-pepper"), "password", "salt")).toEqual(hash)
+		expect(
+			await cryptly.Password.hash(cryptly.Signer.create("HMAC", "SHA-512", "secret-pepper"), "password", "salt")
+		).toEqual(hash)
 	})
 	it("verify", async () => {
-		expect(await Password.verify(Signer.create("HMAC", "SHA-512", "secret-pepper"), hash, "password")).toBeTruthy()
+		expect(
+			await cryptly.Password.verify(cryptly.Signer.create("HMAC", "SHA-512", "secret-pepper"), hash, "password")
+		).toBeTruthy()
 	})
 })
