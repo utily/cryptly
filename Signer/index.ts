@@ -9,19 +9,15 @@ export type Signer = Base
 export namespace Signer {
 	export type Algorithm = SignerAlgorithm
 	export type Hash = SignerHash
-	export function create(algorithm: "HMAC", hash: SignerHash, key: string | Uint8Array): Signer | undefined
+	export function create(algorithm: "HMAC", hash: SignerHash, key: string | Uint8Array): Signer
 	export function create(
 		algorithm: "RSA",
 		hash: SignerHash,
-		publicKey: string | Uint8Array,
+		publicKey: string | Uint8Array | undefined,
 		privateKey: string | Uint8Array
-	): Signer | undefined
-	export function create(
-		algorithm: SignerAlgorithm,
-		hash: SignerHash,
-		...keys: (string | Uint8Array)[]
-	): Signer | undefined {
-		let result: Signer | undefined
+	): Signer
+	export function create(algorithm: SignerAlgorithm, hash: SignerHash, ...keys: (string | Uint8Array)[]): Signer {
+		let result: Signer
 		switch (algorithm) {
 			case "HMAC":
 				result = new HMAC(hash, keys[0])

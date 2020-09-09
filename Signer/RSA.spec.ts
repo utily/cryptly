@@ -1,4 +1,4 @@
-import { RSA } from "./RSA"
+import { Signer } from "./index"
 import { Identifier } from "../Identifier"
 
 describe("Algorithm.RS256", () => {
@@ -12,7 +12,7 @@ describe("Algorithm.RS256", () => {
 		"InviQqJd1KTGRDmWIGrE5YACVmW2JSszD9t5VKxkAA=="
 
 	it("sign", async () => {
-		const algorithm = new RSA("SHA-256", undefined, privateKey)
+		const algorithm = Signer.create("RSA", "SHA-256", undefined, privateKey)
 		const signature = await algorithm.sign(
 			"amount=2050&currency=EUR&ip=1.1.1.1&card[pan]=4111111111111111&card[expire_month]=06&card[expire_year]=2022&card[csc]=123"
 		)
