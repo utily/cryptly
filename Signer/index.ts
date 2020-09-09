@@ -9,7 +9,13 @@ export type Signer = Base
 
 export namespace Signer {
 	export type Algorithm = SignerAlgorithm
+	export namespace Algorithm {
+		export const is = SignerAlgorithm.is
+	}
 	export type Hash = SignerHash
+	export namespace Hash {
+		export const is = SignerHash.is
+	}
 
 	export function create(algorithm: "None"): Signer
 	export function create(algorithm: "HMAC", hash: SignerHash, key: string | Uint8Array): Signer
