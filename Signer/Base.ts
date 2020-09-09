@@ -1,4 +1,6 @@
 import * as Base64 from "../Base64"
+import { TextEncoder } from "../TextEncoder"
+
 export abstract class Base {
 	async sign(data: Uint8Array): Promise<Uint8Array>
 	async sign(data: string): Promise<string>
