@@ -1,7 +1,5 @@
 import { TextEncoder } from "./TextEncoder"
 
-export type Standard = "standard" | "url"
-
 export function encode(value: Uint8Array | string, length?: number): string {
 	const data = typeof value == "string" ? new TextEncoder().encode(value) : value
 	let result: string[] = []
@@ -11,7 +9,7 @@ export function encode(value: Uint8Array | string, length?: number): string {
 		result = result.slice(0, length)
 	return result.join("")
 }
-export function decode(value: string, standard: Standard = "standard"): Uint8Array {
+export function decode(value: string): Uint8Array {
 	if (value.length % 2 == 1)
 		value += "0"
 	const result = new Uint8Array(value.length / 2)

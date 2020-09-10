@@ -16,10 +16,10 @@ describe("Identifier", () => {
 	it("is", () => expect(cryptly.Identifier.is("aAzZ09-_")).toBeTruthy())
 	it("is all", () =>
 		expect(cryptly.Identifier.is("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_")).toBeTruthy())
-	it("is not !", () => expect(cryptly.Identifier.is("hej!0123")).toBeFalsy())
-	it("is not /", () => expect(cryptly.Identifier.is("hej/0123")).toBeFalsy())
-	it("is not =", () => expect(cryptly.Identifier.is("hej=0123")).toBeFalsy())
-	it("is not .", () => expect(cryptly.Identifier.is("hej.0123")).toBeFalsy())
+	it("is not !", () => expect(cryptly.Identifier.is("Hello!0123")).toBeFalsy())
+	it("is not /", () => expect(cryptly.Identifier.is("Hello/0123")).toBeFalsy())
+	it("is not =", () => expect(cryptly.Identifier.is("Hello=0123")).toBeFalsy())
+	it("is not .", () => expect(cryptly.Identifier.is("Hello.0123")).toBeFalsy())
 
 	const binary = [
 		0,

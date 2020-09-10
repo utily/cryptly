@@ -1,7 +1,7 @@
-export type Password = string | Password.Hash
 import * as Base64 from "./Base64"
 import { crypto } from "./crypto"
 
+export type Password = string | Password.Hash
 export namespace Password {
 	export function is(value: any | Password): value is Password {
 		return (
