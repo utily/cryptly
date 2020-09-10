@@ -1,6 +1,6 @@
 import { TextEncoder } from "./TextEncoder"
 
-const tables: { [standard: string]: string } = {
+const tables: { [standard in Standard]: string } = {
 	standard: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/",
 	url: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_",
 }
