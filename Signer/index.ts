@@ -1,9 +1,11 @@
 import { Algorithm as SignerAlgorithm } from "./Algorithm"
 import { Base } from "./Base"
+import { ECDSA } from "./ECDSA"
 import { Hash as SignerHash } from "./Hash"
 import { HMAC } from "./HMAC"
 import { None } from "./None"
 import { RSA } from "./RSA"
+import { RSAPSS } from "./RSAPSS"
 
 export type Signer = Base
 
@@ -19,8 +21,23 @@ export namespace Signer {
 
 	export function create(algorithm: "None"): Signer
 	export function create(algorithm: "HMAC", hash: SignerHash, key: string | Uint8Array): Signer
+	export function create(algorithm: "RSA", hash: SignerHash, publicKey: string | Uint8Array): Signer
+	export function create(algorithm: "RSA-PSS", hash: SignerHash, publicKey: string | Uint8Array): Signer
+	export function create(algorithm: "ECDSA", hash: SignerHash, publicKey: string | Uint8Array): Signer
 	export function create(
 		algorithm: "RSA",
+		hash: SignerHash,
+		publicKey: string | Uint8Array | undefined,
+		privateKey: string | Uint8Array
+	): Signer
+	export function create(
+		algorithm: "RSA-PSS",
+		hash: SignerHash,
+		publicKey: string | Uint8Array | undefined,
+		privateKey: string | Uint8Array
+	): Signer
+	export function create(
+		algorithm: "ECDSA",
 		hash: SignerHash,
 		publicKey: string | Uint8Array | undefined,
 		privateKey: string | Uint8Array
@@ -39,6 +56,14 @@ export namespace Signer {
 			case "RSA":
 				if (hash != undefined)
 					result = new RSA(hash, keys[0], keys[1])
+				break
+			case "RSA-PSS":
+				if (hash != undefined)
+					result = new RSAPSS(hash, keys[0], keys[1])
+				break
+			case "ECDSA":
+				if (hash != undefined)
+					result = new ECDSA(hash, keys[0], keys[1])
 				break
 			case "None":
 				result = new None()
