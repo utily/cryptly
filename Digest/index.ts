@@ -1,7 +1,7 @@
+import * as Base16 from "../Base16"
+import * as Base64 from "../Base64"
 import { crypto } from "../crypto"
 import { TextEncoder } from "../TextEncoder"
-import * as Base64 from "../Base64"
-import * as Base16 from "../Base16"
 import { Algorithm } from "./Algorithm"
 
 export class Digest {
