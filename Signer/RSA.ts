@@ -31,7 +31,7 @@ export class RSA extends Base {
 				privateKey,
 				{ name: "RSASSA-PKCS1-v1_5", hash: { name: hash } },
 				true,
-				["sign", "verify"]
+				["sign"]
 			)
 		}
 	}
