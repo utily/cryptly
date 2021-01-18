@@ -6,6 +6,11 @@ describe("Algorithm", () => {
 		const key = await algorithm.export()
 		expect(key).toHaveLength(43)
 	})
+	it("generate AES GCM 256", async () => {
+		const algorithm = cryptly.Algorithm.aesGcm(256)
+		const key = await algorithm.export()
+		expect(key).toHaveLength(43)
+	})
 	it("generate splitted AES CBC 256", async () => {
 		const algorithm = cryptly.Algorithm.aesCbc(256)
 		const keys = await algorithm.export(2)
@@ -16,6 +21,14 @@ describe("Algorithm", () => {
 		const encrypted = await algorithm.encrypt("The meaning of life, the universe and everything.")
 		expect(encrypted.salt).toHaveLength(22)
 		expect(encrypted.value).toHaveLength(86)
+		const decrypted = await algorithm.decrypt(encrypted)
+		expect(decrypted).toEqual("The meaning of life, the universe and everything.")
+	})
+	it("encrypt & decrypt AES GCM", async () => {
+		const algorithm = cryptly.Algorithm.aesGcm("25ji7n8YAKwPvyWrtR3lUUbxABzAHA2zzdIG_Zb13Iw")
+		const encrypted = await algorithm.encrypt("The meaning of life, the universe and everything.")
+		expect(encrypted.salt).toHaveLength(22)
+		expect(encrypted.value).toHaveLength(87)
 		const decrypted = await algorithm.decrypt(encrypted)
 		expect(decrypted).toEqual("The meaning of life, the universe and everything.")
 	})
