@@ -42,15 +42,21 @@ export class Algorithm {
 		return result.length == 1 ? Base64.encode(result[0], "url") : result.map(r => Base64.encode(r, "url"))
 	}
 	static aesCbc(key: 256 | string | string[]): Algorithm {
+		return Algorithm.generate("AES-CBC", key)
+	}
+	static aesGcm(key: 256 | string | string[]): Algorithm {
+		return Algorithm.generate("AES-GCM", key)
+	}
+	private static generate(algorithm: "AES-CBC" | "AES-GCM", key: 256 | string | string[]): Algorithm {
 		return new Algorithm(
 			typeof key == "number"
-				? crypto.subtle.generateKey({ name: "AES-CBC", length: key }, true, ["encrypt", "decrypt"])
+				? crypto.subtle.generateKey({ name: algorithm, length: key }, true, ["encrypt", "decrypt"])
 				: crypto.subtle.importKey(
 						"raw",
 						Array.isArray(key)
 							? Algorithm.reduceKeys(key.map(k => Base64.decode(k, "url")))
 							: Base64.decode(key, "url"),
-						"AES-CBC",
+						algorithm,
 						true,
 						["encrypt", "decrypt"]
 				  )
