@@ -13,7 +13,7 @@ export namespace Encrypted {
 			typeof value.salt == "string"
 		)
 	}
-	export function toString(encrypted: Encrypted): string {
+	export function stringify(encrypted: Encrypted): string {
 		encrypted.key = encrypted.key && encrypted.key.length != 4 ? encrypted.key.slice(-2) : encrypted.key
 		return [encrypted.key, encrypted.salt, encrypted.value].join(".")
 	}
