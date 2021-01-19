@@ -13,4 +13,12 @@ export namespace Encrypted {
 			typeof value.salt == "string"
 		)
 	}
+	export function toString(encrypted: Encrypted): string {
+		return [encrypted.key, encrypted.salt, encrypted.value].join(".")
+	}
+	export function parse(encryptedString: string): Encrypted | undefined {
+		const splitted = encryptedString.split(".")
+		const encrypted = { name: splitted[0], salt: splitted[1], value: splitted[2] }
+		return Encrypted.is(encrypted) ? encrypted : undefined
+	}
 }
