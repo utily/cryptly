@@ -14,6 +14,7 @@ export namespace Encrypted {
 		)
 	}
 	export function toString(encrypted: Encrypted): string {
+		encrypted.key = encrypted.key && encrypted.key.length != 4 ? encrypted.key.slice(-2) : encrypted.key
 		return [encrypted.key, encrypted.salt, encrypted.value].join(".")
 	}
 	export function parse(encryptedString: string): Encrypted | undefined {
