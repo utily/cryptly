@@ -19,7 +19,7 @@ export namespace Encrypted {
 	}
 	export function parse(encryptedString: string): Encrypted | undefined {
 		const splitted = encryptedString.split(".")
-		const encrypted = { name: splitted[0], salt: splitted[1], value: splitted[2] }
+		const encrypted = { key: splitted[0], salt: splitted[1], value: splitted[2] }
 		return Encrypted.is(encrypted) ? encrypted : undefined
 	}
 }
