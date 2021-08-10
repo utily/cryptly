@@ -13,6 +13,18 @@ export namespace Identifier {
 			)
 		)
 	}
+	export function fromUint24(value: number): Identifier {
+		return fromHexadecimal(value.toString(16).padStart(6, "0"))
+	}
+	export function toUint24(identifier: Identifier): number {
+		return Number.parseInt(toHexadecimal(identifier, 6), 16)
+	}
+	export function fromUint48(value: number): Identifier {
+		return fromHexadecimal(value.toString(16).padStart(12, "0"))
+	}
+	export function toUint48(identifier: Identifier): number {
+		return Number.parseInt(toHexadecimal(identifier, 12), 16)
+	}
 	export function fromBinary(identifier: Uint8Array): Identifier {
 		return Base64.encode(identifier, "url")
 	}
