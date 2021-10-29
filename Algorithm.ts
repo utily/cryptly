@@ -5,10 +5,12 @@ import { TextDecoder } from "./TextDecoder"
 import { TextEncoder } from "./TextEncoder"
 
 export class Algorithm {
+	public name?: string
 	private constructor(private readonly key: PromiseLike<CryptoKey>) {}
 	async encrypt(data: string, salt?: string): Promise<Encrypted> {
 		const iv = salt ? Base64.decode(salt, "url") : crypto.getRandomValues(new Uint8Array(16))
 		return {
+			key: this.name,
 			salt: salt || Base64.encode(iv, "url"),
 			value: Base64.encode(
 				new Uint8Array(
@@ -22,7 +24,11 @@ export class Algorithm {
 			),
 		}
 	}
-	async decrypt(encrypted: Encrypted): Promise<string> {
+	async decrypt(encrypted: Encrypted): Promise<string>
+	async decrypt(encrypted: string, salt: string): Promise<string>
+	async decrypt(encrypted: Encrypted | string, salt?: string): Promise<string> {
+		if (typeof encrypted == "string")
+			encrypted = { value: encrypted, salt: salt ?? "" }
 		return new TextDecoder().decode(
 			new Uint8Array(
 				await crypto.subtle.decrypt(

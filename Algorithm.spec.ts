@@ -45,6 +45,8 @@ describe("Algorithm", () => {
 		expect(await algorithm.encrypt("The meaning of life, the universe and everything.")).not.toEqual(encrypted.value)
 		const decrypted = await algorithm.decrypt(encrypted)
 		expect(decrypted).toEqual("The meaning of life, the universe and everything.")
+		const decrypted2 = await algorithm.decrypt(encrypted.value, encrypted.salt)
+		expect(decrypted2).toEqual("The meaning of life, the universe and everything.")
 	})
 	it("split keys", async () => {
 		const algorithm = cryptly.Algorithm.aesCbc(256)
