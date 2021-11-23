@@ -23,5 +23,8 @@
 		"editor.defaultFormatter": "vscode.typescript-language-features"
 	},
 	"javascript.format.enable": false,
-	"typescript.format.enable": false
+	"typescript.format.enable": false,
+	"cSpell.words": [
+		"cryptly"
+	]
 }
