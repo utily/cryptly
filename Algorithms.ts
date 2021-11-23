@@ -3,7 +3,7 @@ import { Tuple2 } from "./Tuple"
 
 export type Algorithms = Record<string, Algorithm> & { current: Algorithm }
 
-export namespace PrimarySecrets {
+export namespace Algorithms {
 	export function create(create: (keys: string[]) => Algorithm, current: string, ...secrets: string[]): Algorithms {
 		const [first, ...remainder] = secrets.map(part =>
 			Object.fromEntries(part.split(",").map(secret => secret.split(":", 2).map(item => item.trim())))
