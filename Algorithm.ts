@@ -41,11 +41,11 @@ export class Algorithm {
 	}
 	async export(): Promise<string>
 	async export(parts: number): Promise<string[]>
-	async export(parts = 1): Promise<string | string[]> {
+	async export(parts?: number): Promise<string | string[]> {
 		const key = new Uint8Array(await crypto.subtle.exportKey("raw", await this.key))
-		let result: Uint8Array[] = Algorithm.generateRandomKeys(key.length, parts - 1)
+		let result: Uint8Array[] = Algorithm.generateRandomKeys(key.length, (parts ?? 1) - 1)
 		result = [Algorithm.reduceKeys([key, ...result]), ...result]
-		return result.length == 1 ? Base64.encode(result[0], "url") : result.map(r => Base64.encode(r, "url"))
+		return parts == undefined ? Base64.encode(result[0], "url") : result.map(r => Base64.encode(r, "url"))
 	}
 	static aesCbc(key: 256 | string | string[]): Algorithm {
 		return Algorithm.generate("AES-CBC", key)

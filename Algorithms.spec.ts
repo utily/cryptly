@@ -20,8 +20,23 @@ describe("Context.PrimarySecrets", () => {
 			`2020a: ${algorithm["2020a"][1]}, 2021a: ${algorithm["2021a"][1]}`,
 			`2020a: ${algorithm["2020a"][2]}`
 		)
-		expect(Object.keys(secrets)).toEqual(["current", "2020a", "2020b", "2021a"])
+		expect(Object.keys(secrets)).toEqual(["current", "2020a", "2020b", "2021a", "export"])
 		expect(await exportAll(secrets)).toEqual({ current: expected["2020a"], ...expected })
+	})
+	it("generate", async () => {
+		const generated = cryptly.Algorithms.generate(cryptly.Algorithm.aesGcm, 256, "2020a", "2020b", "2021a")
+		expect(generated.current.name).toEqual("2020a")
+		expect(await generated.export()).toEqual([
+			`2020a: ${await generated["2020a"].export()}, 2020b: ${await generated[
+				"2020b"
+			].export()}, 2021a: ${await generated["2021a"].export()}`,
+		])
+	})
+	it("generate + create", async () => {
+		const generated = cryptly.Algorithms.generate(cryptly.Algorithm.aesGcm, 256, "2020a", "2020b", "2021a")
+		const exported = await generated.export(2)
+		const imported = cryptly.Algorithms.create(cryptly.Algorithm.aesGcm, "2020a", ...exported)
+		expect(await imported.export()).toEqual(await generated.export())
 	})
 })
 
@@ -33,6 +48,10 @@ async function exportAll<T>(
 	}
 > {
 	return Object.fromEntries(
-		await Promise.all(Object.entries(secrets).map(async ([name, algorithm]) => [name, await algorithm.export()]))
+		await Promise.all(
+			Object.entries(secrets)
+				.filter(([name, _]) => name != "export")
+				.map(async ([name, algorithm]) => [name, await algorithm.export()])
+		)
 	)
 }
