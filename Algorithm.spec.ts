@@ -59,4 +59,27 @@ describe("Algorithm", () => {
 		expect(imported).toHaveLength(43)
 		expect(imported).toEqual(master)
 	})
+
+	it("export left/right key", async () => {
+		const algorithm = cryptly.Algorithm.aesGcm(256)
+		const key = await algorithm.export()
+		expect(key).toHaveLength(43)
+		const left = cryptly.Algorithm.random(32)
+
+		const right = await algorithm.export(left)
+		const testValueLeft = await algorithm.export(right)
+		const testValueRight = await algorithm.export(testValueLeft)
+		expect(testValueLeft).toEqual(left)
+		expect(testValueRight).toEqual(right)
+	})
+
+	it("random", async () => {
+		const random1 = cryptly.Algorithm.random(32)
+		const random2 = cryptly.Algorithm.random(32, 2)
+		const random3 = cryptly.Algorithm.random(32, 3)
+
+		expect(typeof random1 == "string").toBeTruthy()
+		expect(random2).toHaveLength(2)
+		expect(random3).toHaveLength(3)
+	})
 })
