@@ -73,10 +73,10 @@ export class Algorithm {
 	static aesGcm(key: 256 | string | string[]): Algorithm {
 		return Algorithm.generate("AES-GCM", key)
 	}
-	static random(length: 32): string
-	static random(length: 32, parts: number): string[]
-	static random(length: 32, parts?: number): string | string[] {
-		const result = Algorithm.generateRandomKeys(length, parts && parts > 0 ? parts : 1).map(r =>
+	static random(length: 256): string
+	static random(length: 256, parts: number): string[]
+	static random(length: 256, parts?: number): string | string[] {
+		const result = Algorithm.generateRandomKeys(length / 8, parts && parts > 0 ? parts : 1).map(r =>
 			Base64.encode(r, "url")
 		)
 		return parts ? result : result[0]
