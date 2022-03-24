@@ -41,17 +41,45 @@ export class Algorithm {
 	}
 	async export(): Promise<string>
 	async export(parts: number): Promise<string[]>
-	async export(parts = 1): Promise<string | string[]> {
+	async export(parts: Uint8Array): Promise<string>
+	async export(parts: Uint8Array[]): Promise<string[]>
+	async export(parts: string): Promise<string>
+	async export(parts: string[]): Promise<string[]>
+	async export(parts?: number | Uint8Array | Uint8Array[] | string | string[]): Promise<string | string[]> {
+		let result: string | string[]
 		const key = new Uint8Array(await crypto.subtle.exportKey("raw", await this.key))
-		let result: Uint8Array[] = Algorithm.generateRandomKeys(key.length, parts - 1)
-		result = [Algorithm.reduceKeys([key, ...result]), ...result]
-		return result.length == 1 ? Base64.encode(result[0], "url") : result.map(r => Base64.encode(r, "url"))
+		if (parts == undefined)
+			result = (await this.export(1))[0]
+		else if (typeof parts == "number")
+			result = await this.export(parts > 1 ? Algorithm.generateRandomKeys(key.length, parts - 1) : [])
+		else if (typeof parts == "string")
+			result = await this.export(Base64.decode(parts, "url"))
+		else if (parts instanceof Uint8Array)
+			result = (await this.export([parts]))[0]
+		else if (this.isStringArray(parts))
+			result = await this.export(parts.map(part => Base64.decode(part, "url")))
+		else {
+			parts = [Algorithm.reduceKeys([key, ...parts]), ...parts]
+			result = parts.map(r => Base64.encode(r, "url"))
+		}
+		return result
+	}
+	private isStringArray(value: unknown): value is string[] {
+		return Array.isArray(value) && value.length > 0 && value.every((item: any) => typeof item == "string")
 	}
 	static aesCbc(key: 256 | string | string[]): Algorithm {
 		return Algorithm.generate("AES-CBC", key)
 	}
 	static aesGcm(key: 256 | string | string[]): Algorithm {
 		return Algorithm.generate("AES-GCM", key)
+	}
+	static random(length: 32): string
+	static random(length: 32, parts: number): string[]
+	static random(length: 32, parts?: number): string | string[] {
+		const result = Algorithm.generateRandomKeys(length, parts && parts > 0 ? parts : 1).map(r =>
+			Base64.encode(r, "url")
+		)
+		return parts ? result : result[0]
 	}
 	private static generate(algorithm: "AES-CBC" | "AES-GCM", key: 256 | string | string[]): Algorithm {
 		return new Algorithm(
