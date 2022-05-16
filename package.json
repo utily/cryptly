@@ -54,6 +54,10 @@
     "prepare": "npm run build",
     "clean": "rm -rf dist node_modules coverage"
   },
+  "engines": {
+    "npm": ">=7.0.0",
+    "node": ">=16.0.0"
+  },
   "optionalDependencies": {
     "node-webcrypto-ossl": "^2.1.2"
   },
