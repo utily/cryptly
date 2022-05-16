@@ -1,5 +1,5 @@
-import { crypto } from "./crypto"
 
+import {crypto } from "./crypto"
 export namespace RandomValue {
 	export function generate<
 		T extends

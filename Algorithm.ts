@@ -1,5 +1,5 @@
 import * as Base64 from "./Base64"
-import { crypto } from "./crypto"
+import {crypto } from "./crypto"
 import { Encrypted } from "./Encrypted"
 import { TextDecoder } from "./TextDecoder"
 import { TextEncoder } from "./TextEncoder"

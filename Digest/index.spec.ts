@@ -1,5 +1,6 @@
 import { Digest } from "./index"
 
+
 describe("Digest", () => {
 	it("Get Length 256", async () => {
 		expect(new Digest("SHA-256").length).toEqual(256)

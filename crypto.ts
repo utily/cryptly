@@ -1,3 +1,2 @@
-import * as WebCrypto from "node-webcrypto-ossl"
 
-export const crypto = new WebCrypto.Crypto() as Crypto
+export const crypto = new SubtleCrypto()
