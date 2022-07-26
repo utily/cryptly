@@ -1,6 +1,6 @@
 {
 	"name": "cryptly",
-	"version": "3.0.0",
+	"version": "3.0.1",
 	"description": "Fullstack encryption library.",
 	"author": "Utily Contributors",
 	"license": "MIT",
@@ -13,9 +13,9 @@
 	"main": "dist/index.js",
 	"typings": "dist/index.d.ts",
 	"type": "module",
-  "browser": {
-    "./dist/crypto": "./dist/crypto.browser"
-  },
+	"browser": {
+		"./dist/crypto": "./dist/crypto.browser"
+	},
 	"git": {
 		"tagName": "v${version}"
 	},
