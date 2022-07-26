@@ -1,3 +1,4 @@
 node_modules
 dist
-Tuple.ts
+transpiled
+*.js

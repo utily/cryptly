@@ -4,8 +4,7 @@ import { ECDSA } from "./ECDSA"
 import { Hash as SignerHash } from "./Hash"
 import { HMAC } from "./HMAC"
 import { None } from "./None"
-import { RSA } from "./RSA"
-import { RSAPSS } from "./RSAPSS"
+import { Rsa } from "./Rsa"
 
 export type Signer = Base
 
@@ -18,29 +17,42 @@ export namespace Signer {
 	export namespace Hash {
 		export const is = SignerHash.is
 	}
+	export function generate(algorithm: "RSA" | "RSA-PSS", hash: SignerHash, length: 1024 | 2048 | 4096): Rsa
+	export function generate(algorithm: "RSA" | "RSA-PSS", hash: SignerHash, length: 1024 | 2048 | 4096): Signer {
+		let result: Signer
+		switch (algorithm) {
+			case "RSA":
+				result = Rsa.generate("SSA", hash, length)
+				break
+			case "RSA-PSS":
+				result = Rsa.generate("PSS", hash, length)
+				break
+		}
 
+		return result
+	}
 	export function create(algorithm: "None"): Signer
 	export function create(algorithm: "HMAC", hash: SignerHash, key: string | Uint8Array): Signer
-	export function create(algorithm: "RSA", hash: SignerHash, publicKey: string | Uint8Array): Signer
-	export function create(algorithm: "RSA-PSS", hash: SignerHash, publicKey: string | Uint8Array): Signer
+	export function create(algorithm: "RSA", hash: SignerHash, publicKey: string | Uint8Array): Rsa
+	export function create(algorithm: "RSA-PSS", hash: SignerHash, publicKey: string | Uint8Array): Rsa
 	export function create(algorithm: "ECDSA", hash: SignerHash, publicKey: string | Uint8Array): Signer
 	export function create(
 		algorithm: "RSA",
 		hash: SignerHash,
 		publicKey: string | Uint8Array | undefined,
-		privateKey: string | Uint8Array
-	): Signer
+		privateKey: string | Uint8Array | undefined
+	): Rsa
 	export function create(
 		algorithm: "RSA-PSS",
 		hash: SignerHash,
 		publicKey: string | Uint8Array | undefined,
-		privateKey: string | Uint8Array
-	): Signer
+		privateKey: string | Uint8Array | undefined
+	): Rsa
 	export function create(
 		algorithm: "ECDSA",
 		hash: SignerHash,
 		publicKey: string | Uint8Array | undefined,
-		privateKey: string | Uint8Array
+		privateKey: string | Uint8Array | undefined
 	): Signer
 	export function create(
 		algorithm: SignerAlgorithm | "None",
@@ -48,26 +60,23 @@ export namespace Signer {
 		...keys: (string | Uint8Array)[]
 	): Signer | undefined {
 		let result: Signer | undefined
-		switch (algorithm) {
-			case "HMAC":
-				if (hash != undefined)
+		if (hash != undefined)
+			switch (algorithm) {
+				case "HMAC":
 					result = new HMAC(hash, keys[0])
-				break
-			case "RSA":
-				if (hash != undefined)
-					result = new RSA(hash, keys[0], keys[1])
-				break
-			case "RSA-PSS":
-				if (hash != undefined)
-					result = new RSAPSS(hash, keys[0], keys[1])
-				break
-			case "ECDSA":
-				if (hash != undefined)
+					break
+				case "RSA":
+					result = Rsa.import("SSA", hash, keys[0], keys[1])
+					break
+				case "RSA-PSS":
+					result = Rsa.import("PSS", hash, keys[0], keys[1])
+					break
+				case "ECDSA":
 					result = new ECDSA(hash, keys[0], keys[1])
-				break
-			case "None":
-				result = new None()
-		}
+					break
+			}
+		else if (algorithm == "None")
+			result = new None()
 		return result
 	}
 }
