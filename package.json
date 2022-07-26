@@ -1,6 +1,6 @@
 {
 	"name": "cryptly",
-	"version": "2.1.0",
+	"version": "3.0.0",
 	"description": "Fullstack encryption library.",
 	"author": "Utily Contributors",
 	"license": "MIT",
@@ -56,9 +56,6 @@
 		"prepare": "npm run build",
 		"clean": "rimraf dist node_modules coverage"
 	},
-  "optionalDependencies": {
-    "node-webcrypto-ossl": "^2.1.2"
-  },
 	"devDependencies": {
 		"@types/jest": "^28.1.6",
 		"@typescript-eslint/eslint-plugin": "5.31.0",

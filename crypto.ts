@@ -1,3 +1,3 @@
-import * as WebCrypto from "node-webcrypto-ossl"
+import * as C from "crypto"
 
-export const crypto = new WebCrypto.Crypto() as Crypto
+export const crypto = C.webcrypto as Crypto
