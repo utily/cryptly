@@ -77,4 +77,16 @@ describe("Identifier", () => {
 	it("fromUint48 max safe", () => expect(cryptly.Identifier.fromUint48(281474976710655)).toEqual("________"))
 	it("toUint48 min safe", () => expect(cryptly.Identifier.toUint48("AAAAAAAA")).toEqual(0))
 	it("fromUint48 min safe", () => expect(cryptly.Identifier.fromUint48(0)).toEqual("AAAAAAAA"))
+	it("min", () => expect(cryptly.Identifier.min(4)).toEqual("AAAA"))
+	it("max", () => expect(cryptly.Identifier.max(4)).toEqual("____"))
+	it("next", () => {
+		expect(cryptly.Identifier.next("AAAA")).toEqual("AAAB")
+		expect(cryptly.Identifier.next("AAA_")).toEqual("AABA")
+		expect(cryptly.Identifier.next("____")).toEqual("AAAA")
+	})
+	it("previous", () => {
+		expect(cryptly.Identifier.previous("____")).toEqual("___-")
+		expect(cryptly.Identifier.previous("___A")).toEqual("__-_")
+		expect(cryptly.Identifier.previous("AAAA")).toEqual("____")
+	})
 })
