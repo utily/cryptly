@@ -43,3 +43,14 @@ export function decode(value: string, standard: Standard = "standard"): Uint8Arr
 	}
 	return result
 }
+export function next(value: string, increment = 1, standard: Standard = "standard"): string {
+	const table = tables[standard]
+	const rest = value.length > 1 ? value.substring(0, value.length - 1) : increment > 0 ? "" : table[63]
+	const number = (value.length == 0 ? 0 : table.indexOf(value[value.length - 1])) + increment
+	return (
+		(number > 63 || number < 0 ? next(rest, Math.floor(number / 63), standard) : rest) + table[remainder(number, 64)]
+	)
+}
+function remainder(left: number, right: number): number {
+	return left >= 0 ? left % right : remainder(left + right, right)
+}
