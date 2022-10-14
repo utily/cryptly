@@ -49,16 +49,16 @@ export namespace Identifier {
 			result.push(Math.floor(d / 16).toString(16), (d % 16).toString(16))
 		if (length)
 			result = result.slice(0, length)
-		return result.join("")
+		return result.join()
 	}
 	export function min(length: Length): Identifier {
-		return "".padStart(length, "A")
+		return "".padStart(length, "-")
 	}
 	export function max(length: Length): Identifier {
-		return "".padStart(length, "_")
+		return "".padStart(length, "z")
 	}
 	export function next(identifier: Identifier, increment = 1): Identifier {
-		const result = Base64.next(identifier, increment, "url")
+		const result = Base64.next(identifier, increment, "ordered")
 		return result.length == identifier.length ? result : result.substring(result.length - identifier.length)
 	}
 	export function previous(identifier: Identifier, decrement = 1): Identifier {
