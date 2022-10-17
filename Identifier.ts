@@ -49,7 +49,7 @@ export namespace Identifier {
 			result.push(Math.floor(d / 16).toString(16), (d % 16).toString(16))
 		if (length)
 			result = result.slice(0, length)
-		return result.join()
+		return result.join("")
 	}
 	export function min(length: Length): Identifier {
 		return "".padStart(length, "-")
