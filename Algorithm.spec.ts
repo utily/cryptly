@@ -1,4 +1,7 @@
+import * as pgp from "openpgp"
+import { crypto } from "./crypto"
 import * as cryptly from "./index"
+import { keyblock, keyblock2 } from "./keyblock"
 
 describe("Algorithm", () => {
 	it("generate AES CBC 256", async () => {
@@ -81,5 +84,100 @@ describe("Algorithm", () => {
 		expect(typeof random1 == "string").toBeTruthy()
 		expect(random2).toHaveLength(2)
 		expect(random3).toHaveLength(3)
+	})
+
+	// it("card export", async () => {
+	// 	const cards = [
+	// 		{ pan: "4111111111111111", expires: [1, 25], reference: "reference1" },
+	// 		{ pan: "5111111111111111", expires: [2, 25], reference: "reference2" },
+	// 		{ pan: "6111111111111111", expires: [3, 25], reference: "reference3" },
+	// 		{ pan: "7111111111111111", expires: [4, 25], reference: "reference4" },
+	// 	]
+	// 	const key = await crypto.subtle.generateKey(
+	// 		{
+	// 			name: "AES-GCM",
+	// 			length: 256,
+	// 		},
+	// 		true,
+	// 		["encrypt", "decrypt"]
+	// 	)
+	// 	console.log("key", key)
+	// 	// const a = JSON.stringify(await crypto.subtle.exportKey("jwk", key))
+	// 	// console.log("a", a)
+	// 	// const i = await crypto.subtle.importKey(
+	// 	// 	"jwk",
+	// 	// 	JSON.parse(a),
+	// 	// 	{
+	// 	// 		name: "AES-GCM",
+	// 	// 	},
+	// 	// 	false,
+	// 	// 	["encrypt", "decrypt"]
+	// 	// )
+	// 	// console.log("i",i)
+	// 	// const stringi = JSON.stringify(key)
+	// 	// const parsed = JSON.parse(stringi)
+	// 	// console.log("parsed", parsed)
+
+	// 	// encrypt
+	// 	const encoded = new TextEncoder().encode(JSON.stringify(cards))
+	// 	const iv = crypto.getRandomValues(new Uint8Array(12)).toString()
+	// 	console.log("iv", iv)
+
+	// 	const encrypted = await crypto.subtle.encrypt({ name: "AES-GCM", iv }, key, encoded)
+	// 	console.log("encrypted", encrypted)
+	// 	// decrypt
+	// 	const decrypted = await crypto.subtle.decrypt({ name: "AES-GCM", iv }, key, encrypted)
+	// 	const decoded = new TextDecoder().decode(decrypted)
+	// 	expect(decoded).toBe(JSON.stringify(cards))
+	// })
+	it("pgp encrypt", async () => {
+		const cards = [
+			{ pan: "4111111111111111", expires: [1, 25], reference: "reference1" },
+			{ pan: "5111111111111111", expires: [2, 25], reference: "reference2" },
+			{ pan: "6111111111111111", expires: [3, 25], reference: "reference3" },
+			{ pan: "7111111111111111", expires: [4, 25], reference: "reference4" },
+		]
+		const keys = await pgp.generateKey({
+			userIDs: [{ name: "person", email: "person@somebody.com" }],
+			curve: "ed25519",
+		})
+		const publicKeys = await pgp.readKey({
+			armoredKey: keyblock2,
+		})
+		const message = await pgp.createMessage({ text: JSON.stringify(cards) })
+		// const message = await pgp.readMessage({ armoredMessage: JSON.stringify(cards) })
+		const encrypted = await pgp.encrypt({
+			message,
+			encryptionKeys: publicKeys,
+		})
+		// console.log("key", keys)
+		console.log("encrypted", encrypted)
+		// const a = JSON.stringify(await crypto.subtle.exportKey("jwk", key))
+		// console.log("a", a)
+		// const i = await crypto.subtle.importKey(
+		// 	"jwk",
+		// 	JSON.parse(a),
+		// 	{
+		// 		name: "AES-GCM",
+		// 	},
+		// 	false,
+		// 	["encrypt", "decrypt"]
+		// )
+		// console.log("i",i)
+		// const stringi = JSON.stringify(key)
+		// const parsed = JSON.parse(stringi)
+		// console.log("parsed", parsed)
+
+		// encrypt
+		// const encoded = new TextEncoder().encode(JSON.stringify(cards))
+		// const iv = crypto.getRandomValues(new Uint8Array(12)).toString()
+		// console.log("iv", iv)
+
+		// const encrypted = await crypto.subtle.encrypt({ name: "AES-GCM", iv }, key, encoded)
+		// console.log("encrypted", encrypted)
+		// // decrypt
+		// const decrypted = await crypto.subtle.decrypt({ name: "AES-GCM", iv }, key, encrypted)
+		// const decoded = new TextDecoder().decode(decrypted)
+		// expect(decoded).toBe(JSON.stringify(cards))
 	})
 })
