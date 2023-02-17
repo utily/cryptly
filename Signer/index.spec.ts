@@ -63,7 +63,9 @@ const privateKeyPSS =
 describe("Signer", () => {
 	it("Create None", async () => {
 		const signer = await Signer.create("None")
-		const signature = signer && (await signer.sign("Some string"))
+		const signature = await signer.sign("Some string")
+		console.log("testtttt", signature)
+
 		expect(signer && signature && (await signer.verify("Some string", signature))).toEqual(true)
 	})
 	it("Create HMAC", async () => {

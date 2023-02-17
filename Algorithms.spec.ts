@@ -7,7 +7,7 @@ describe("Context.PrimarySecrets", () => {
 			"2020b": cryptly.Algorithm.aesGcm(256),
 			"2021a": cryptly.Algorithm.aesGcm(256),
 		} as const
-		const expected = await exportAll(generated)
+		const expected = (await exportAll(generated)) as Record<string, string>
 		const algorithm = {
 			"2020a": await generated["2020a"].export(3),
 			"2020b": [await generated["2020b"].export()],
@@ -25,7 +25,7 @@ describe("Context.PrimarySecrets", () => {
 	})
 })
 
-async function exportAll<T>(secrets: T): Promise<
+async function exportAll<T>(secrets: cryptly.Algorithm | Record<string, cryptly.Algorithm>): Promise<
 	{
 		[P in keyof T]: string
 	}
