@@ -64,9 +64,7 @@ describe("Signer", () => {
 	it("Create None", async () => {
 		const signer = await Signer.create("None")
 		const signature = await signer.sign("Some string")
-		console.log("testtttt", signature)
-
-		expect(signer && signature && (await signer.verify("Some string", signature))).toEqual(true)
+		expect(await signer.verify("Some string", signature)).toEqual(true)
 	})
 	it("Create HMAC", async () => {
 		const signer = await Signer.create("HMAC", "SHA-256", "Super Secret Encryption Key")
