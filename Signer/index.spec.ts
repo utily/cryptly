@@ -68,8 +68,8 @@ describe("Signer", () => {
 	})
 	it("Create HMAC", async () => {
 		const signer = await Signer.create("HMAC", "SHA-256", "Super Secret Encryption Key")
-		const signature = signer && (await signer.sign("Some string"))
-		expect(signer && signature && (await signer.verify("Some string", signature))).toEqual(true)
+		const signature = await signer.sign("Some string")
+		expect(await signer.verify("Some string", signature)).toEqual(true)
 	})
 	it("Create RSA from public Key", async () => {
 		const signer = await Signer.create("RSA", "SHA-256", publicKey)
@@ -99,14 +99,14 @@ describe("Signer", () => {
 	it.skip("Create ECDSA 256", async () => {
 		// does not work currently on Node
 		const signer = await Signer.create("ECDSA", "SHA-256", publicKey, privateKey)
-		const signature = signer && (await signer.sign("Some string"))
-		expect(signer && signature && (await signer.verify("Some string", signature))).toEqual(true)
+		const signature = await signer.sign("Some string")
+		expect(await signer.verify("Some string", signature)).toEqual(true)
 	})
 
 	it.skip("Create ECDSA 512", async () => {
 		// does not work currently on Node
 		const signer = await Signer.create("ECDSA", "SHA-512", publicKeyECDSA521, privateKeyECDSA521)
-		const signature = signer && (await signer.sign("Some string"))
-		expect(signer && signature && (await signer.verify("Some string", signature))).toEqual(true)
+		const signature = await signer.sign("Some string")
+		expect(await signer.verify("Some string", signature)).toEqual(true)
 	})
 })

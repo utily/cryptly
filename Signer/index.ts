@@ -40,11 +40,7 @@ export namespace Signer {
 		return result
 	}
 	export async function create(algorithm: "None"): Promise<Signer>
-	export async function create(
-		algorithm: "HMAC",
-		hash: SignerHash,
-		key: string | Uint8Array
-	): Promise<Signer | undefined>
+	export async function create(algorithm: "HMAC", hash: SignerHash, key: string | Uint8Array): Promise<Signer>
 	export async function create(
 		algorithm: "RSA",
 		hash: SignerHash,
@@ -55,11 +51,7 @@ export namespace Signer {
 		hash: SignerHash,
 		publicKey: string | Uint8Array
 	): Promise<Rsa | undefined>
-	export async function create(
-		algorithm: "ECDSA",
-		hash: SignerHash,
-		publicKey: string | Uint8Array
-	): Promise<Signer | undefined>
+	export async function create(algorithm: "ECDSA", hash: SignerHash, publicKey: string | Uint8Array): Promise<Signer>
 	export async function create(
 		algorithm: "RSA",
 		hash: SignerHash,
@@ -77,7 +69,7 @@ export namespace Signer {
 		hash: SignerHash,
 		publicKey: string | Uint8Array | undefined,
 		privateKey: string | Uint8Array | undefined
-	): Promise<Signer | undefined>
+	): Promise<Signer>
 	export async function create(
 		algorithm: SignerAlgorithm | "None",
 		hash?: SignerHash | undefined,
