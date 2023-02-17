@@ -6,13 +6,11 @@ describe("Password", () => {
 		salt: "salt",
 	}
 	it("hash", async () => {
-		expect(
-			await cryptly.Password.hash(cryptly.Signer.create("HMAC", "SHA-512", "secret-pepper"), "password", "salt")
-		).toEqual(hash)
+		const signer = await cryptly.Signer.create("HMAC", "SHA-512", "secret-pepper")
+		expect(signer && (await cryptly.Password.hash(signer, "password", "salt"))).toEqual(hash)
 	})
 	it("verify", async () => {
-		expect(
-			await cryptly.Password.verify(cryptly.Signer.create("HMAC", "SHA-512", "secret-pepper"), hash, "password")
-		).toBeTruthy()
+		const signer = await cryptly.Signer.create("HMAC", "SHA-512", "secret-pepper")
+		expect(signer && (await cryptly.Password.verify(signer, hash, "password"))).toBeTruthy()
 	})
 })

@@ -12,15 +12,15 @@ describe("Algorithm.RS256", () => {
 	const signature =
 		"iB3mZtf2HHlsHJAHhJAbG5u4KYrya_EPebL9WSMaszg9kYPqgSC6w6vq0QAMT6tjv2zxNFoxIJrP6RDJKG6aPbfU0V0a6OJ57wXV5DGEtgitOXQasE4oCV-4oMSJdOVf0P5YrF7x9sFmcPZ_0cG5oqBic7B53Cng2u9jGaLmNUU"
 	it("sign", async () => {
-		const algorithm = Signer.create("RSA", "SHA-256", undefined, keys.private)
-		expect(await algorithm.sign(message)).toEqual(signature)
+		const algorithm = await Signer.create("RSA", "SHA-256", undefined, keys.private)
+		expect(algorithm && (await algorithm.sign(message))).toEqual(signature)
 	})
 	it("verify", async () => {
-		const algorithm = Signer.create("RSA", "SHA-256", keys.public)
-		expect(await algorithm.verify(message, signature)).toEqual(true)
+		const algorithm = await Signer.create("RSA", "SHA-256", keys.public)
+		expect(algorithm && (await algorithm.verify(message, signature))).toEqual(true)
 	})
 	it("generate 1024 + export base64", async () => {
-		const algorithm = Signer.generate("RSA", "SHA-256", 1024)
+		const algorithm = await Signer.generate("RSA", "SHA-256", 1024)
 		expect(await algorithm.verify(message, await algorithm.sign(message))).toEqual(true)
 		const exported = {
 			public: await algorithm.export("public", "base64"),
@@ -28,16 +28,24 @@ describe("Algorithm.RS256", () => {
 		}
 		expect(exported.public).toMatch(/MI[A-Z,a-z,0-9,+,/]+=*/g)
 		expect(exported.private).toMatch(/MI[A-Z,a-z,0-9,+,/]+=*/g)
-		const imported = Signer.create("RSA", "SHA-256", exported.public, exported.private)
-		expect(await imported.verify(message, await imported.sign(message))).toEqual(true)
+		const imported = await Signer.create("RSA", "SHA-256", exported.public, exported.private)
+		expect(imported && (await imported.verify(message, await imported.sign(message)))).toEqual(true)
 	})
 	it("generate 4096 + export pem", async () => {
-		const algorithm = Signer.generate("RSA", "SHA-256", 4096)
+		const algorithm = await Signer.generate("RSA", "SHA-256", 4096)
 		expect(await algorithm.export("public", "pem")).toMatch(
 			/-----BEGIN PUBLIC KEY-----\nMI[A-Z,a-z,0-9,+,/,\n]+=*\n-----END PUBLIC KEY-----/gm
 		)
 		expect(await algorithm.export("private", "pem")).toMatch(
 			/-----BEGIN PRIVATE KEY-----\nMI[A-Z,a-z,0-9,+,/,\n]+=*\n-----END PRIVATE KEY-----/gm
 		)
+	})
+	it("incorrect public key", async () => {
+		const publicAlgorithm = await Signer.create("RSA", "SHA-256", "incorrect key")
+		expect(publicAlgorithm).toEqual(undefined)
+	})
+	it("incorrect private key", async () => {
+		const privateAlgorithm = await Signer.create("RSA", "SHA-256", undefined, "incorrect key")
+		expect(privateAlgorithm).toEqual(undefined)
 	})
 })

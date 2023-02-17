@@ -62,48 +62,51 @@ const privateKeyPSS =
 
 describe("Signer", () => {
 	it("Create None", async () => {
-		const signer = Signer.create("None")
-		const signature = await signer.sign("Some string")
-		expect(await signer.verify("Some string", signature)).toEqual(true)
+		const signer = await Signer.create("None")
+		const signature = signer && (await signer.sign("Some string"))
+		expect(signer && signature && (await signer.verify("Some string", signature))).toEqual(true)
 	})
 	it("Create HMAC", async () => {
-		const signer = Signer.create("HMAC", "SHA-256", "Super Secret Encryption Key")
-		const signature = await signer.sign("Some string")
-		expect(await signer.verify("Some string", signature)).toEqual(true)
+		const signer = await Signer.create("HMAC", "SHA-256", "Super Secret Encryption Key")
+		const signature = signer && (await signer.sign("Some string"))
+		expect(signer && signature && (await signer.verify("Some string", signature))).toEqual(true)
 	})
 	it("Create RSA from public Key", async () => {
-		const signer = Signer.create("RSA", "SHA-256", publicKey)
-		const signature = "Mt_9lCR7XgmVg0PZIN3xJJtHELMx73WynaEyU03eqX2FNUr10tG5P4PmsoSESbb_5BhSKjTqOjoHDCH96njqpg"
-		expect(await signer.verify("Some string", signature)).toEqual(true)
+		const signer = await Signer.create("RSA", "SHA-256", publicKey)
+		const signature = signer && "Mt_9lCR7XgmVg0PZIN3xJJtHELMx73WynaEyU03eqX2FNUr10tG5P4PmsoSESbb_5BhSKjTqOjoHDCH96njqpg"
+		expect(signer && signature && (await signer.verify("Some string", signature))).toEqual(true)
 	})
 	it("Create RSA from private Key", async () => {
-		const signer = Signer.create("RSA", "SHA-256", publicKey, privateKey)
-		console.log({ private: await signer.export("private"), public: await signer.export("public") })
-		const signature = await signer.sign("Some string")
-		expect(await signer.verify("Some string", signature)).toEqual(true)
+		const signer = await Signer.create("RSA", "SHA-256", publicKey, privateKey)
+		console.log({
+			private: signer && (await signer.export("private")),
+			public: signer && (await signer.export("public")),
+		})
+		const signature = signer && (await signer.sign("Some string"))
+		expect(signer && signature && (await signer.verify("Some string", signature))).toEqual(true)
 	})
 	it("Create RSA-PSS from public Key", async () => {
-		const signer = Signer.create("RSA-PSS", "SHA-256", publicKeyPSS)
+		const signer = await Signer.create("RSA-PSS", "SHA-256", publicKeyPSS)
 		const signature =
 			"ncd0q-5A-UuGcI0Piic7JnmUneX3rWoko9B_-iFxBSxNHnPwsWLGVVSCIAEs1EWfgVc9U5PDAYMDRwmrAl_BIxbmsYzLDTTm1xSaUTzAiEPZ1ya3GXKUU6g-N7muI0eJwg5hgV-H5i-t8vqQuSgxPdovZIc30X445PSRp3BpgNGKqR_SU-6DQj95fkW3lvDjeqzzG4et5ZXyp9LQuafI4wWGzdpzmLoPDmFvgl0YcCMx3JCTkuD1GgpkFbZewGJuTxhppX2JcmKQANeU5qN9KLZyP0Vh5tJYttXz5wy1FqK34OlkGTgjFre1VCuxb2yJ4ALL5mtpKEqXS8YqnoKdTw"
-		expect(await signer.verify("Some string", signature)).toEqual(true)
+		expect(signer && signature && (await signer.verify("Some string", signature))).toEqual(true)
 	})
 	it("Create RSA-PSS from private Key", async () => {
-		const signer = Signer.create("RSA-PSS", "SHA-256", publicKeyPSS, privateKeyPSS)
-		const signature = await signer.sign("Some string")
-		expect(await signer.verify("Some string", signature)).toEqual(true)
+		const signer = await Signer.create("RSA-PSS", "SHA-256", publicKeyPSS, privateKeyPSS)
+		const signature = signer && (await signer.sign("Some string"))
+		expect(signer && signature && (await signer.verify("Some string", signature))).toEqual(true)
 	})
 	it.skip("Create ECDSA 256", async () => {
 		// does not work currently on Node
-		const signer = Signer.create("ECDSA", "SHA-256", publicKey, privateKey)
-		const signature = await signer.sign("Some string")
-		expect(await signer.verify("Some string", signature)).toEqual(true)
+		const signer = await Signer.create("ECDSA", "SHA-256", publicKey, privateKey)
+		const signature = signer && (await signer.sign("Some string"))
+		expect(signer && signature && (await signer.verify("Some string", signature))).toEqual(true)
 	})
 
 	it.skip("Create ECDSA 512", async () => {
 		// does not work currently on Node
-		const signer = Signer.create("ECDSA", "SHA-512", publicKeyECDSA521, privateKeyECDSA521)
-		const signature = await signer.sign("Some string")
-		expect(await signer.verify("Some string", signature)).toEqual(true)
+		const signer = await Signer.create("ECDSA", "SHA-512", publicKeyECDSA521, privateKeyECDSA521)
+		const signature = signer && (await signer.sign("Some string"))
+		expect(signer && signature && (await signer.verify("Some string", signature))).toEqual(true)
 	})
 })

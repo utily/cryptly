@@ -17,48 +17,72 @@ export namespace Signer {
 	export namespace Hash {
 		export const is = SignerHash.is
 	}
-	export function generate(algorithm: "RSA" | "RSA-PSS", hash: SignerHash, length: 1024 | 2048 | 4096): Rsa
-	export function generate(algorithm: "RSA" | "RSA-PSS", hash: SignerHash, length: 1024 | 2048 | 4096): Signer {
+	export async function generate(
+		algorithm: "RSA" | "RSA-PSS",
+		hash: SignerHash,
+		length: 1024 | 2048 | 4096
+	): Promise<Rsa>
+	export async function generate(
+		algorithm: "RSA" | "RSA-PSS",
+		hash: SignerHash,
+		length: 1024 | 2048 | 4096
+	): Promise<Signer> {
 		let result: Signer
 		switch (algorithm) {
 			case "RSA":
-				result = Rsa.generate("SSA", hash, length)
+				result = await Rsa.generate("SSA", hash, length)
 				break
 			case "RSA-PSS":
-				result = Rsa.generate("PSS", hash, length)
+				result = await Rsa.generate("PSS", hash, length)
 				break
 		}
 
 		return result
 	}
-	export function create(algorithm: "None"): Signer
-	export function create(algorithm: "HMAC", hash: SignerHash, key: string | Uint8Array): Signer
-	export function create(algorithm: "RSA", hash: SignerHash, publicKey: string | Uint8Array): Rsa
-	export function create(algorithm: "RSA-PSS", hash: SignerHash, publicKey: string | Uint8Array): Rsa
-	export function create(algorithm: "ECDSA", hash: SignerHash, publicKey: string | Uint8Array): Signer
-	export function create(
+	export async function create(algorithm: "None"): Promise<Signer>
+	export async function create(
+		algorithm: "HMAC",
+		hash: SignerHash,
+		key: string | Uint8Array
+	): Promise<Signer | undefined>
+	export async function create(
+		algorithm: "RSA",
+		hash: SignerHash,
+		publicKey: string | Uint8Array
+	): Promise<Rsa | undefined>
+	export async function create(
+		algorithm: "RSA-PSS",
+		hash: SignerHash,
+		publicKey: string | Uint8Array
+	): Promise<Rsa | undefined>
+	export async function create(
+		algorithm: "ECDSA",
+		hash: SignerHash,
+		publicKey: string | Uint8Array
+	): Promise<Signer | undefined>
+	export async function create(
 		algorithm: "RSA",
 		hash: SignerHash,
 		publicKey: string | Uint8Array | undefined,
 		privateKey: string | Uint8Array | undefined
-	): Rsa
-	export function create(
+	): Promise<Rsa | undefined>
+	export async function create(
 		algorithm: "RSA-PSS",
 		hash: SignerHash,
 		publicKey: string | Uint8Array | undefined,
 		privateKey: string | Uint8Array | undefined
-	): Rsa
-	export function create(
+	): Promise<Rsa | undefined>
+	export async function create(
 		algorithm: "ECDSA",
 		hash: SignerHash,
 		publicKey: string | Uint8Array | undefined,
 		privateKey: string | Uint8Array | undefined
-	): Signer
-	export function create(
+	): Promise<Signer | undefined>
+	export async function create(
 		algorithm: SignerAlgorithm | "None",
 		hash?: SignerHash | undefined,
 		...keys: (string | Uint8Array)[]
-	): Signer | undefined {
+	): Promise<Signer | undefined> {
 		let result: Signer | undefined
 		if (hash != undefined)
 			switch (algorithm) {
@@ -66,10 +90,10 @@ export namespace Signer {
 					result = new HMAC(hash, keys[0])
 					break
 				case "RSA":
-					result = Rsa.import("SSA", hash, keys[0], keys[1])
+					result = await Rsa.import("SSA", hash, keys[0], keys[1])
 					break
 				case "RSA-PSS":
-					result = Rsa.import("PSS", hash, keys[0], keys[1])
+					result = await Rsa.import("PSS", hash, keys[0], keys[1])
 					break
 				case "ECDSA":
 					result = new ECDSA(hash, keys[0], keys[1])

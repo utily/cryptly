@@ -9,18 +9,18 @@ export class Rsa extends Base {
 	}
 	private constructor(
 		private readonly variant: Rsa.Variant,
-		private readonly publicKey: Promise<CryptoKey> | undefined,
-		private readonly privateKey: Promise<CryptoKey> | undefined
+		private readonly publicKey: CryptoKey | undefined,
+		private readonly privateKey: CryptoKey | undefined
 	) {
 		super()
 	}
 	protected async signBinary(data: Uint8Array): Promise<Uint8Array> {
 		return this.privateKey
-			? new Uint8Array(await crypto.subtle.sign(this.parameters, await this.privateKey, data))
+			? new Uint8Array(await crypto.subtle.sign(this.parameters, this.privateKey, data))
 			: new Uint8Array(0)
 	}
 	protected async verifyBinary(data: Uint8Array, signature: Uint8Array): Promise<boolean> {
-		return !!this.publicKey && crypto.subtle.verify(this.parameters, await this.publicKey, signature, data)
+		return !!this.publicKey && crypto.subtle.verify(this.parameters, this.publicKey, signature, data)
 	}
 	async export(type: "private" | "public", format: "jwk"): Promise<JsonWebKey | undefined>
 	async export(type: "private" | "public", format: "buffer"): Promise<ArrayBuffer | undefined>
@@ -29,7 +29,7 @@ export class Rsa extends Base {
 		type: "private" | "public",
 		format: "jwk" | "buffer" | "base64" | "pem" = "base64"
 	): Promise<JsonWebKey | ArrayBuffer | string | undefined> {
-		const key = await (type == "private" ? this.privateKey : this.publicKey)
+		const key = type == "private" ? this.privateKey : this.publicKey
 		let result: JsonWebKey | ArrayBuffer | string | undefined
 		if (key)
 			switch (format) {
@@ -60,39 +60,39 @@ export class Rsa extends Base {
 			}
 		return result
 	}
-	static import(
+	static async import(
 		variant: Rsa.Variant,
 		hash: Hash,
 		publicKey: Uint8Array | string | undefined,
 		privateKey?: Uint8Array | string
-	): Rsa {
-		return new Rsa(
-			variant,
-			Rsa.importHelper(variant, hash, "public", publicKey),
-			Rsa.importHelper(variant, hash, "private", privateKey)
-		)
+	): Promise<Rsa | undefined> {
+		const publicHelper = await Rsa.importHelper(variant, hash, "public", publicKey)
+		const privateHelper = await Rsa.importHelper(variant, hash, "private", privateKey)
+		return !publicHelper && !privateHelper ? undefined : new Rsa(variant, publicHelper, privateHelper)
 	}
-	private static importHelper(
+	private static async importHelper(
 		variant: Rsa.Variant,
 		hash: Hash,
 		type: "private" | "public",
 		key: Uint8Array | string | undefined
-	): Promise<CryptoKey> | undefined {
-		if (typeof key == "string")
-			key = Base64.decode(key)
-		return (
-			key &&
-			crypto.subtle.importKey(
-				type == "private" ? "pkcs8" : "spki",
-				key,
-				{ name: getParameters(variant).name, hash: { name: hash } },
-				true,
-				[type == "private" ? "sign" : "verify"]
-			)
-		)
+	): Promise<CryptoKey | undefined> {
+		let result: CryptoKey | undefined
+		if (key) {
+			key = typeof key == "string" ? Base64.decode(key) : key
+			result = await crypto.subtle
+				.importKey(
+					type == "private" ? "pkcs8" : "spki",
+					key,
+					{ name: getParameters(variant).name, hash: { name: hash } },
+					true,
+					[type == "private" ? "sign" : "verify"]
+				)
+				.catch(c => undefined)
+		}
+		return result
 	}
-	static generate(variant: Rsa.Variant, hash: Hash, length: 1024 | 2048 | 4096): Rsa {
-		const keyPair: Promise<CryptoKeyPair> = crypto.subtle.generateKey(
+	static async generate(variant: Rsa.Variant, hash: Hash, length: 1024 | 2048 | 4096): Promise<Rsa> {
+		const keyPair: CryptoKeyPair = await crypto.subtle.generateKey(
 			{
 				name: getParameters(variant).name,
 				modulusLength: length,
@@ -102,11 +102,7 @@ export class Rsa extends Base {
 			true,
 			["sign", "verify"]
 		)
-		return new Rsa(
-			variant,
-			keyPair.then(value => value.publicKey),
-			keyPair.then(value => value.privateKey)
-		)
+		return new Rsa(variant, keyPair.publicKey, keyPair.privateKey)
 	}
 }
 export namespace Rsa {
