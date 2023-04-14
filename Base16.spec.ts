@@ -1,4 +1,4 @@
-import * as cryptly from "./index"
+import { cryptly } from "./index"
 
 describe("Base16", () => {
 	it("encode standard 1", () =>
