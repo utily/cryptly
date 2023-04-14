@@ -5,9 +5,9 @@ export function encode(value: ArrayBuffer | Uint8Array | string, length?: number
 	const data =
 		typeof value == "string"
 			? new TextEncoder().encode(value)
-			: value instanceof global.Uint8Array
+			: value instanceof Uint8Array
 			? value
-			: new global.Uint8Array(value)
+			: new Uint8Array(value)
 	let result: string[] = []
 	for (const d of data)
 		result.push(Math.floor(d / 16).toString(16), (d % 16).toString(16))
@@ -18,7 +18,7 @@ export function encode(value: ArrayBuffer | Uint8Array | string, length?: number
 export function decode(value: string): Uint8Array {
 	if (value.length % 2 == 1)
 		value += "0"
-	const result = new global.Uint8Array(value.length / 2)
+	const result = new Uint8Array(value.length / 2)
 	for (let index = 0; index < result.length; index++)
 		result[index] = Number.parseInt(value[index * 2], 16) * 16 + Number.parseInt(value[index * 2 + 1], 16)
 	return result

@@ -14,9 +14,9 @@ export function encode(
 	const data =
 		typeof value == "string"
 			? new TextEncoder().encode(value)
-			: value instanceof global.Uint8Array
+			: value instanceof Uint8Array
 			? value
-			: new global.Uint8Array(value)
+			: new Uint8Array(value)
 	const table = tables[standard]
 	const result: string[] = []
 	for (let c = 0; c < data.length; c += 3) {
@@ -36,7 +36,7 @@ export function decode(value: string, standard: Standard = "standard"): Uint8Arr
 		value = value.substring(0, value.length - 1)
 	const table = tables[standard]
 	const data = value.split("").map(c => table.indexOf(c))
-	const result = new global.Uint8Array(Math.floor((data.length / 4) * 3))
+	const result = new Uint8Array(Math.floor((data.length / 4) * 3))
 	for (let c = 0; c < result.length; c += 3) {
 		const d0 = data.shift() || 0
 		const d1 = data.shift() || 0
