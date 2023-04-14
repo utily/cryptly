@@ -1,4 +1,4 @@
-import * as cryptly from "./index"
+import { cryptly } from "./index"
 
 describe("Algorithm", () => {
 	it("generate AES CBC 256", async () => {

@@ -1,4 +1,4 @@
-import * as cryptly from "./index"
+import { cryptly } from "./index"
 
 describe("Context.PrimarySecrets", () => {
 	it("create", async () => {
@@ -25,7 +25,9 @@ describe("Context.PrimarySecrets", () => {
 	})
 })
 
-async function exportAll<T>(secrets: T): Promise<
+async function exportAll<T extends Record<string, cryptly.Algorithm>>(
+	secrets: T
+): Promise<
 	{
 		[P in keyof T]: string
 	}
