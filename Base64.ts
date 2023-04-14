@@ -24,11 +24,11 @@ export function encode(
 		result.push(table[c2 & 63])
 	}
 	const length = Math.ceil((value.length / 3) * 4)
-	return result.join("").substr(0, length) + padding.repeat(result.length - length)
+	return result.join("").substring(0, length) + padding.repeat(result.length - length)
 }
 export function decode(value: string, standard: Standard = "standard"): Uint8Array {
 	while (value.endsWith("=") && value.length > 0)
-		value = value.substr(0, value.length - 1)
+		value = value.substring(0, value.length - 1)
 	const table = tables[standard]
 	const data = value.split("").map(c => table.indexOf(c))
 	const result = new Uint8Array(Math.floor((data.length / 4) * 3))
