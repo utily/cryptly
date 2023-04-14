@@ -1,3 +1,4 @@
+import * as ArrayBuffer from "./ArrayBuffer"
 import { TextEncoder } from "./TextEncoder"
 
 const tables: { [standard in Standard]: string } = {
@@ -6,24 +7,28 @@ const tables: { [standard in Standard]: string } = {
 }
 export type Standard = "standard" | "url"
 export function encode(
-	value: Uint8Array | string,
+	value: ArrayBuffer | Uint8Array | string,
 	standard: Standard = "standard",
 	padding: "" | "=" | "-" = ""
 ): string {
-	if (typeof value == "string")
-		value = new TextEncoder().encode(value)
+	const data =
+		typeof value == "string"
+			? new TextEncoder().encode(value)
+			: value instanceof global.Uint8Array
+			? value
+			: new global.Uint8Array(value)
 	const table = tables[standard]
 	const result: string[] = []
-	for (let c = 0; c < value.length; c += 3) {
-		const c0 = value[c]
-		const c1 = c + 1 < value.length ? value[c + 1] : 0
-		const c2 = c + 2 < value.length ? value[c + 2] : 0
+	for (let c = 0; c < data.length; c += 3) {
+		const c0 = data[c]
+		const c1 = c + 1 < data.length ? data[c + 1] : 0
+		const c2 = c + 2 < data.length ? data[c + 2] : 0
 		result.push(table[c0 >>> 2])
 		result.push(table[((c0 & 3) << 4) | (c1 >>> 4)])
 		result.push(table[((c1 & 15) << 2) | (c2 >>> 6)])
 		result.push(table[c2 & 63])
 	}
-	const length = Math.ceil((value.length / 3) * 4)
+	const length = Math.ceil((data.length / 3) * 4)
 	return result.join("").substring(0, length) + padding.repeat(result.length - length)
 }
 export function decode(value: string, standard: Standard = "standard"): Uint8Array {
@@ -31,7 +36,7 @@ export function decode(value: string, standard: Standard = "standard"): Uint8Arr
 		value = value.substring(0, value.length - 1)
 	const table = tables[standard]
 	const data = value.split("").map(c => table.indexOf(c))
-	const result = new Uint8Array(Math.floor((data.length / 4) * 3))
+	const result = new global.Uint8Array(Math.floor((data.length / 4) * 3))
 	for (let c = 0; c < result.length; c += 3) {
 		const d0 = data.shift() || 0
 		const d1 = data.shift() || 0
@@ -53,4 +58,16 @@ export function next(value: string, increment = 1, standard: Standard = "standar
 }
 function remainder(left: number, right: number): number {
 	return left >= 0 ? left % right : remainder(left + right, right)
+}
+export function xor(data: string[], standard: Standard = "standard", padding: "" | "=" | "-" = ""): string {
+	return encode(ArrayBuffer.xor(...data.map(d => decode(d, standard))), standard, padding)
+}
+export function bytewiseAdd(data: string[], standard: Standard = "standard", padding: "" | "=" | "-" = ""): string {
+	return encode(ArrayBuffer.bytewiseAdd(...data.map(d => decode(d, standard))), standard, padding)
+}
+export function add(data: string[], standard: Standard = "standard", padding: "" | "=" | "-" = ""): string {
+	return encode(ArrayBuffer.add(...data.map(d => decode(d, standard))), standard, padding)
+}
+export function combine(data: string[], standard: Standard = "standard", padding: "" | "=" | "-" = ""): string {
+	return encode(ArrayBuffer.combine(...data.map(d => decode(d, standard))), standard, padding)
 }
