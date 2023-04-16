@@ -25,4 +25,20 @@ describe("Base16", () => {
 		expect(new cryptly.TextDecoder().decode(cryptly.Base16.decode("616e79206361726e616c20706c6561737572"))).toEqual(
 			"any carnal pleasur"
 		))
+	it("xor", () =>
+		expect(
+			cryptly.Base16.xor(["5468697320697320746865206461746120282a29", "616e79206361726e616c20706c656173757265"])
+		).toMatchInlineSnapshot(`"5409070a000a12521a090900140d1100535d584c"`))
+	it("bytewiseAdd", () =>
+		expect(
+			cryptly.Base16.bytewiseAdd(["5468697320697320746865206461746120282a29", "616e79206361726e616c20706c656173757265"])
+		).toMatchInlineSnapshot(`"54c9d7ec40ccd492e2c9d140d4cdd9c2939d9c8e"`))
+	it("add", () =>
+		expect(
+			cryptly.Base16.add(["5468697320697320746865206461746120282a29", "616e79206361726e616c20706c656173757265"])
+		).toMatchInlineSnapshot(`"54c9d7ec40ccd492e2c9d140d4cdd9c2939d9c8e"`))
+	it("combine", () =>
+		expect(
+			cryptly.Base16.combine(["5468697320697320746865206461746120282a29", "616e79206361726e616c20706c656173757265"])
+		).toMatchInlineSnapshot(`"549aaad2819fbad3cb9a9b819d90c284d3edf0e0"`))
 })
