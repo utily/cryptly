@@ -4,8 +4,9 @@ const tables: { [standard in Standard]: string } = {
 	standard: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/",
 	url: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_",
 	ordered: "-0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz",
+	reversed: "zyxwvutsrqponmlkjihgfedcba_ZYXWVUTSRQPONMLKJIHGFEDCBA9876543210-",
 }
-export type Standard = "standard" | "url" | "ordered"
+export type Standard = "standard" | "url" | "ordered" | "reversed"
 export function encode(
 	value: Uint8Array | string,
 	standard: Standard = "standard",
