@@ -8,12 +8,21 @@ const tables: { [standard in Standard]: string } = {
 }
 export type Standard = "standard" | "url" | "ordered" | "reversed"
 export function encode(
-	value: Uint8Array | string,
+	value: Uint8Array | string | number | bigint,
 	standard: Standard = "standard",
 	padding: "" | "=" | "-" = ""
 ): string {
-	if (typeof value == "string")
-		value = new TextEncoder().encode(value)
+	switch (typeof value) {
+		case "string":
+			value = new TextEncoder().encode(value)
+			break
+		case "number":
+		case "bigint":
+			value = new Uint8Array(new BigUint64Array([value as bigint]).buffer)
+			break
+		default:
+			break
+	}
 	const table = tables[standard]
 	const result: string[] = []
 	for (let c = 0; c < value.length; c += 3) {
