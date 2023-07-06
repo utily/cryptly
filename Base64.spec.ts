@@ -1,4 +1,4 @@
-import * as cryptly from "./index"
+import { cryptly } from "./index"
 
 describe("Base64", () => {
 	it("encode standard =", () =>
@@ -21,4 +21,20 @@ describe("Base64", () => {
 		))
 	it("decode DvT", () => expect(cryptly.Base64.decode("DvQ", "url")).toEqual(Uint8Array.from([14, 244])))
 	it("decode DvT", () => expect(cryptly.Base64.encode(Uint8Array.from([14, 244]), "url")).toEqual("DvQ"))
+	it("xor", () =>
+		expect(cryptly.Base64.xor(["V6h7cyBpcyB0taUgZGF0YSAoK72", "Y4y5IGNhcm5hbCBwbGVhc3VyZ7u8"])).toMatchInlineSnapshot(
+			`"Y9sRWxBBGx1BGJXVTAEABxRST5AB"`
+		))
+	it("bytewiseAdd", () =>
+		expect(
+			cryptly.Base64.bytewiseAdd(["V6h7cyBpcyB0taUgZGF0YSAoK72", "Y4y5IGNhcm5hbCBwbGVhc3VyZ7u8"])
+		).toMatchInlineSnapshot(`"Y+Nhm9aB2+GB4NUVjMnC59aSj+Z5"`))
+	it("add", () =>
+		expect(cryptly.Base64.add(["V6h7cyBpcyB0taUgZGF0YSAoK72", "Y4y5IGNhcm5hbCBwbGVhc3VyZ7u8"])).toMatchInlineSnapshot(
+			`"Y+Rhm9aB2+GB4NYVjMnC59aSj+d5"`
+		))
+	it("combine", () =>
+		expect(
+			cryptly.Base64.combine(["V6h7cyBpcyB0taUgZGF0YSAoK72", "Y4y5IGNhcm5hbCBwbGVhc3VyZ7u8"])
+		).toMatchInlineSnapshot(`"ZJOykrzCrsfCykFfzZKF0JjS4D7z"`))
 })

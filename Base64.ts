@@ -1,3 +1,4 @@
+import * as ArrayBuffer from "./ArrayBuffer"
 import { TextEncoder } from "./TextEncoder"
 
 const tables: { [standard in Standard]: string } = {
@@ -8,34 +9,36 @@ const tables: { [standard in Standard]: string } = {
 }
 export type Standard = "standard" | "url" | "ordered" | "reversed"
 export function encode(
-	value: Uint8Array | string | number | bigint,
+	value: ArrayBuffer | Uint8Array | string | number | bigint,
 	standard: Standard = "standard",
 	padding: "" | "=" | "-" = ""
 ): string {
+	let data: Uint8Array
 	switch (typeof value) {
 		case "string":
-			value = new TextEncoder().encode(value)
+			data = new TextEncoder().encode(value)
 			break
 		case "number":
 		case "bigint":
-			value = new Uint8Array(new BigUint64Array([value as bigint]).buffer)
+			data = new Uint8Array(new BigUint64Array([value as bigint]).buffer)
 			break
 		default:
+			data = value instanceof Uint8Array ? value : new Uint8Array(value)
 			break
 	}
 	const table = tables[standard]
 	const result: string[] = []
-	for (let c = 0; c < value.length; c += 3) {
-		const c0 = value[c]
-		const c1 = c + 1 < value.length ? value[c + 1] : 0
-		const c2 = c + 2 < value.length ? value[c + 2] : 0
+	for (let c = 0; c < data.length; c += 3) {
+		const c0 = data[c]
+		const c1 = c + 1 < data.length ? data[c + 1] : 0
+		const c2 = c + 2 < data.length ? data[c + 2] : 0
 		result.push(table[c0 >>> 2])
 		result.push(table[((c0 & 3) << 4) | (c1 >>> 4)])
 		result.push(table[((c1 & 15) << 2) | (c2 >>> 6)])
 		result.push(table[c2 & 63])
 	}
-	const length = Math.ceil((value.length / 3) * 4)
-	return result.join("").substring(0, length) + padding.repeat(result.length - length)
+	const length = Math.ceil((data.length / 3) * 4)
+	return result.join("").substr(0, length) + padding.repeat(result.length - length)
 }
 export function decode(value: string, standard: Standard = "standard"): Uint8Array {
 	while (value.endsWith("=") && value.length > 0)
@@ -69,4 +72,16 @@ export function convert(value: string, input: Standard, output: Standard): strin
 }
 function remainder(left: number, right: number): number {
 	return left >= 0 ? left % right : remainder(left + right, right)
+}
+export function xor(data: string[], standard: Standard = "standard", padding: "" | "=" | "-" = ""): string {
+	return encode(ArrayBuffer.xor(...data.map(d => decode(d, standard))), standard, padding)
+}
+export function bytewiseAdd(data: string[], standard: Standard = "standard", padding: "" | "=" | "-" = ""): string {
+	return encode(ArrayBuffer.bytewiseAdd(...data.map(d => decode(d, standard))), standard, padding)
+}
+export function add(data: string[], standard: Standard = "standard", padding: "" | "=" | "-" = ""): string {
+	return encode(ArrayBuffer.add(...data.map(d => decode(d, standard))), standard, padding)
+}
+export function combine(data: string[], standard: Standard = "standard", padding: "" | "=" | "-" = ""): string {
+	return encode(ArrayBuffer.combine(...data.map(d => decode(d, standard))), standard, padding)
 }
