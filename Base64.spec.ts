@@ -9,6 +9,14 @@ describe("Base64", () => {
 		expect(cryptly.Base64.encode("any carnal pleasure", "standard", "=")).toEqual("YW55IGNhcm5hbCBwbGVhc3VyZQ=="))
 	it("encode standard = 0", () =>
 		expect(cryptly.Base64.encode("any carnal pleasur", "standard", "=")).toEqual("YW55IGNhcm5hbCBwbGVhc3Vy"))
+	it("encode ordered", () => {
+		expect(cryptly.Base64.encode("This is the data (*)", "ordered", "=")).not.toEqual("VGhpcyBpcyB0aGUgZGF0YSAoKik=")
+		expect(cryptly.Base64.encode("This is the data (*)", "ordered")).toEqual("K5WdRm0dRm0oP5JVO54oNH-c9XZ")
+	})
+	it("encode reversed", () => {
+		expect(cryptly.Base64.encode("This is the data (*)", "reversed", "=")).not.toEqual("VGhpcyBpcyB0aGUgZGF0YSAoKik=")
+		expect(cryptly.Base64.encode("This is the data (*)", "reversed", "=")).toEqual("etTLYCyLYCyA_tfUatuAbhzMpSQ=")
+	})
 	it("encode url", () =>
 		expect(cryptly.Base64.encode("This is the data (*)", "url", "")).toEqual("VGhpcyBpcyB0aGUgZGF0YSAoKik"))
 	it("decode url", () =>
