@@ -19,8 +19,10 @@ export function encode(
 			data = new TextEncoder().encode(value)
 			break
 		case "number":
+			data = new Uint8Array(new BigUint64Array([BigInt(value)]).buffer)
+			break
 		case "bigint":
-			data = new Uint8Array(new BigUint64Array([value as bigint]).buffer)
+			data = new Uint8Array(new BigUint64Array([value]).buffer)
 			break
 		default:
 			data = value instanceof Uint8Array ? value : new Uint8Array(value)

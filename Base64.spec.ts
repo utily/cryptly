@@ -9,7 +9,22 @@ describe("Base64", () => {
 		expect(cryptly.Base64.encode("any carnal pleasure", "standard", "=")).toEqual("YW55IGNhcm5hbCBwbGVhc3VyZQ=="))
 	it("encode standard = 0", () =>
 		expect(cryptly.Base64.encode("any carnal pleasur", "standard", "=")).toEqual("YW55IGNhcm5hbCBwbGVhc3Vy"))
-	it("encode ordered", () => {
+	describe.each(["ordered", "reversed"] as const)("", (type: "ordered" | "reversed") => {
+		it.each(["2020-12-31", "2023-11-30", "2023-12-30"])(`encode ${type} and check order`, (date: string) => {
+			const [small, big] = [cryptly.Base64.encode(date, type), cryptly.Base64.encode("2023-12-31", type)]
+			expect(type == "reversed" ? small > big : small < big).toBeTruthy()
+		})
+		it(`${type} from number`, () => {
+			const now = new Date().getTime()
+			const [small, big] = [cryptly.Base64.encode(now, type), cryptly.Base64.encode(now + 1, type)]
+			expect(type == "reversed" ? small > big : small < big).toBeTruthy()
+		})
+		it(`${type} to be equal`, () => {
+			const now = new Date().getTime()
+			expect(cryptly.Base64.encode(now, type) == cryptly.Base64.encode(now, type)).toBeTruthy()
+		})
+	})
+	it(`encode ordered`, () => {
 		expect(cryptly.Base64.encode("This is the data (*)", "ordered", "=")).not.toEqual("VGhpcyBpcyB0aGUgZGF0YSAoKik=")
 		expect(cryptly.Base64.encode("This is the data (*)", "ordered")).toEqual("K5WdRm0dRm0oP5JVO54oNH-c9XZ")
 	})
