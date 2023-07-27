@@ -1,5 +1,5 @@
 export class TextDecoder {
-	readonly encoding: "utf-8" = "utf-8"
+	readonly encoding = "utf-8"
 	decode(view: ArrayBufferView | undefined, options?: { stream?: boolean }): string {
 		return !view
 			? ""

@@ -4,19 +4,30 @@ import { TextEncoder } from "./TextEncoder"
 const tables: { [standard in Standard]: string } = {
 	standard: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/",
 	url: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_",
+	ordered: "-0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz",
+	reversed: "zyxwvutsrqponmlkjihgfedcba_ZYXWVUTSRQPONMLKJIHGFEDCBA9876543210-",
 }
-export type Standard = "standard" | "url"
+export type Standard = "standard" | "url" | "ordered" | "reversed"
 export function encode(
-	value: ArrayBuffer | Uint8Array | string,
+	value: ArrayBuffer | Uint8Array | string | number | bigint,
 	standard: Standard = "standard",
 	padding: "" | "=" | "-" = ""
 ): string {
-	const data =
-		typeof value == "string"
-			? new TextEncoder().encode(value)
-			: value instanceof Uint8Array
-			? value
-			: new Uint8Array(value)
+	let data: Uint8Array
+	switch (typeof value) {
+		case "string":
+			data = new TextEncoder().encode(value)
+			break
+		case "number":
+			data = new Uint8Array(new BigUint64Array([BigInt(value)]).buffer)
+			break
+		case "bigint":
+			data = new Uint8Array(new BigUint64Array([value]).buffer)
+			break
+		default:
+			data = value instanceof Uint8Array ? value : new Uint8Array(value)
+			break
+	}
 	const table = tables[standard]
 	const result: string[] = []
 	for (let c = 0; c < data.length; c += 3) {
@@ -29,13 +40,13 @@ export function encode(
 		result.push(table[c2 & 63])
 	}
 	const length = Math.ceil((data.length / 3) * 4)
-	return result.join("").substring(0, length) + padding.repeat(result.length - length)
+	return result.join("").substr(0, length) + padding.repeat(result.length - length)
 }
 export function decode(value: string, standard: Standard = "standard"): Uint8Array {
 	while (value.endsWith("=") && value.length > 0)
 		value = value.substring(0, value.length - 1)
 	const table = tables[standard]
-	const data = value.split("").map(c => table.indexOf(c))
+	const data = [...value].map(c => table.indexOf(c))
 	const result = new Uint8Array(Math.floor((data.length / 4) * 3))
 	for (let c = 0; c < result.length; c += 3) {
 		const d0 = data.shift() || 0
@@ -55,6 +66,11 @@ export function next(value: string, increment = 1, standard: Standard = "standar
 	return (
 		(number > 63 || number < 0 ? next(rest, Math.floor(number / 63), standard) : rest) + table[remainder(number, 64)]
 	)
+}
+export function convert(value: string, input: Standard, output: Standard): string {
+	const inputTable = tables[input]
+	const outputTable = tables[output]
+	return [...value].map(c => outputTable[inputTable.indexOf(c)]).join()
 }
 function remainder(left: number, right: number): number {
 	return left >= 0 ? left % right : remainder(left + right, right)
