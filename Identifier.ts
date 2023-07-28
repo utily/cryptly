@@ -31,7 +31,9 @@ export namespace Identifier {
 	export function toBinary(identifier: Identifier): Uint8Array {
 		return Base64.decode(identifier, "url")
 	}
-	export function generate(length: Length): Identifier {
+	export function generate(length: Length): Identifier
+	export function generate(length: 16, ordering: "ordered" | "reversed", epoch?: number): Identifier
+	export function generate(length: Length, ordering?: "ordered" | "reversed", epoch?: number): Identifier {
 		return fromBinary(crypto.getRandomValues(new Uint8Array((length / 4) * 3)))
 	}
 	export function fromHexadecimal(identifier: string): Identifier {
