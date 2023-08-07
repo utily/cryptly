@@ -32,14 +32,6 @@ describe("Base64", () => {
 		expect(cryptly.Base64.encode("This is the data (*)", "reversed", "=")).not.toEqual("VGhpcyBpcyB0aGUgZGF0YSAoKik=")
 		expect(cryptly.Base64.encode("This is the data (*)", "reversed", "=")).toEqual("etTLYCyLYCyA_tfUatuAbhzMpSQ=")
 	})
-	it("ordered id", () => {
-		const epoch = new Date().setFullYear(2222).valueOf()
-		// const ordered = cryptly.Base64.encode(epoch, "ordered")
-		// console.log(ordered)
-		// console.log(64 ** (ordered.length + 1))
-		console.log(1690544465975)
-		console.log(cryptly.Base64.encode(epoch, "reversed"))
-	})
 	it("encode url", () =>
 		expect(cryptly.Base64.encode("This is the data (*)", "url", "")).toEqual("VGhpcyBpcyB0aGUgZGF0YSAoKik"))
 	it("decode url", () =>

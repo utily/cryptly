@@ -25,16 +25,33 @@ export namespace Identifier {
 	export function toUint48(identifier: Identifier): number {
 		return Number.parseInt(toHexadecimal(identifier, 12), 16)
 	}
-	export function fromBinary(identifier: Uint8Array): Identifier {
-		return Base64.encode(identifier, "url")
+	export function fromBinary(identifier: Uint8Array, standard: Base64.Standard = "url"): Identifier {
+		return Base64.encode(identifier, standard)
 	}
 	export function toBinary(identifier: Identifier): Uint8Array {
 		return Base64.decode(identifier, "url")
 	}
 	export function generate(length: Length): Identifier
-	export function generate(length: 16, ordering: "ordered" | "reversed", epoch?: number): Identifier
-	export function generate(length: Length, ordering?: "ordered" | "reversed", epoch?: number): Identifier {
-		return fromBinary(crypto.getRandomValues(new Uint8Array((length / 4) * 3)))
+	export function generate(
+		length: Length,
+		ordering: Extract<Base64.Standard, "ordered" | "reversed">,
+		value?: number | Uint8Array | string
+	): Identifier
+	export function generate(
+		length: Length,
+		ordering?: Extract<Base64.Standard, "ordered" | "reversed">,
+		value?: number | Uint8Array | string
+	): Identifier {
+		let result: Identifier | undefined = undefined
+		if (value || value == 0 || value == "")
+			result = Base64.encode(value, ordering).substring(0, length)
+		return (
+			(result ?? "") +
+			fromBinary(crypto.getRandomValues(new Uint8Array((length / 4) * 3)), ordering).substring(
+				0,
+				length - (result ? result.length : 0)
+			)
+		)
 	}
 	export function fromHexadecimal(identifier: string): Identifier {
 		if (identifier.length % 2 == 1)

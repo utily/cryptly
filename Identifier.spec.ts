@@ -89,4 +89,21 @@ describe("Identifier", () => {
 		expect(cryptly.Identifier.previous("zzz-")).toEqual("zzyz")
 		expect(cryptly.Identifier.previous("----")).toEqual("zzzz")
 	})
+	it.each([4, 8, 12, 16, 64] as const)(`ordered id is`, (length: cryptly.Identifier.Length) => {
+		expect(cryptly.Identifier.is(cryptly.Identifier.generate(length, "ordered", length), length)).toBeTruthy()
+	})
+	const now = new Date().getTime()
+	it.each([4, 8, 12, 16, 64] as const)(`ordered id is ordered`, (length: cryptly.Identifier.Length) => {
+		expect(
+			cryptly.Identifier.generate(length, "ordered", now + 1) > cryptly.Identifier.generate(length, "ordered", now)
+		).toBeTruthy()
+	})
+	it.each([4, 8, 12, 16, 64] as const)(`reverse ordered id is`, (length: cryptly.Identifier.Length) => {
+		expect(cryptly.Identifier.is(cryptly.Identifier.generate(length, "reversed", length), length)).toBeTruthy()
+	})
+	it.each([4, 8, 12, 16, 64] as const)(`reverse ordered id is reverse ordered`, (length: cryptly.Identifier.Length) => {
+		expect(
+			cryptly.Identifier.generate(length, "reversed", now + 1) < cryptly.Identifier.generate(length, "reversed", now)
+		).toBeTruthy()
+	})
 })

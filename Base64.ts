@@ -20,7 +20,6 @@ export function encode(
 			break
 		case "number":
 			data = new Uint8Array(new BigUint64Array([BigInt(value)]).buffer)
-			console.log(data)
 			break
 		case "bigint":
 			data = new Uint8Array(new BigUint64Array([value]).buffer)
