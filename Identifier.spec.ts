@@ -89,4 +89,28 @@ describe("Identifier", () => {
 		expect(cryptly.Identifier.previous("zzz-")).toEqual("zzyz")
 		expect(cryptly.Identifier.previous("----")).toEqual("zzzz")
 	})
+	it.each([4, 8, 12, 16, 64] as const)(`ordered id is`, (length: cryptly.Identifier.Length) => {
+		expect(cryptly.Identifier.is(cryptly.Identifier.generate(length, "ordered", length), length)).toBeTruthy()
+	})
+	const now = 1691418818480
+	it("pattern", () => {
+		expect(cryptly.Identifier.generate(4, "ordered", now)).toMatch(/^gESe$/)
+		expect(cryptly.Identifier.generate(8, "ordered", now)).toMatch(/^gESeo7Z0$/)
+		expect(cryptly.Identifier.generate(12, "ordered", now)).toMatch(/^gESeo7Z0---[\w\d-_]{1}$/)
+		expect(cryptly.Identifier.generate(16, "ordered", now)).toMatch(/^gESeo7Z0---[\w\d-_]{5}$/)
+		expect(cryptly.Identifier.generate(64, "ordered", now)).toMatch(/^gESeo7Z0---[\w\d-_]{53}$/)
+	})
+	it.each([4, 8, 12, 16, 64] as const)(`ordered id is ordered`, (length: cryptly.Identifier.Length) => {
+		expect(
+			cryptly.Identifier.generate(length, "ordered", now + 1) > cryptly.Identifier.generate(length, "ordered", now)
+		).toBeTruthy()
+	})
+	it.each([4, 8, 12, 16, 64] as const)(`reverse ordered id is`, (length: cryptly.Identifier.Length) => {
+		expect(cryptly.Identifier.is(cryptly.Identifier.generate(length, "reversed", length), length)).toBeTruthy()
+	})
+	it.each([4, 8, 12, 16, 64] as const)(`reverse ordered id is reverse ordered`, (length: cryptly.Identifier.Length) => {
+		expect(
+			cryptly.Identifier.generate(length, "reversed", now + 1) < cryptly.Identifier.generate(length, "reversed", now)
+		).toBeTruthy()
+	})
 })
