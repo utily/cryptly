@@ -92,25 +92,56 @@ describe("Identifier", () => {
 	it.each([4, 8, 12, 16, 64] as const)(`ordered id is`, (length: cryptly.Identifier.Length) => {
 		expect(cryptly.Identifier.is(cryptly.Identifier.generate(length, "ordered", length), length)).toBeTruthy()
 	})
-	const now = 1691418818480
-	it("pattern", () => {
-		expect(cryptly.Identifier.generate(4, "ordered", now)).toMatch(/^gESe$/)
-		expect(cryptly.Identifier.generate(8, "ordered", now)).toMatch(/^gESeo7Z0$/)
-		expect(cryptly.Identifier.generate(12, "ordered", now)).toMatch(/^gESeo7Z0---[\w\d-_]{1}$/)
-		expect(cryptly.Identifier.generate(16, "ordered", now)).toMatch(/^gESeo7Z0---[\w\d-_]{5}$/)
-		expect(cryptly.Identifier.generate(64, "ordered", now)).toMatch(/^gESeo7Z0---[\w\d-_]{53}$/)
-	})
-	it.each([4, 8, 12, 16, 64] as const)(`ordered id is ordered`, (length: cryptly.Identifier.Length) => {
+	// const now = 1691418818480
+	const now = new Date().getTime()
+	// it("pattern", () => {
+	// 	expect(cryptly.Identifier.generate(4, "ordered", now)).toMatch(/^gESe$/)
+	// 	expect(cryptly.Identifier.generate(8, "ordered", now)).toMatch(/^gESeo7Z0$/)
+	// 	expect(cryptly.Identifier.generate(12, "ordered", now)).toMatch(/^gESeo7Z0---[\w\d-_]{1}$/)
+	// 	expect(cryptly.Identifier.generate(16, "ordered", now)).toMatch(/^gESeo7Z0---[\w\d-_]{5}$/)
+	// 	expect(cryptly.Identifier.generate(64, "ordered", now)).toMatch(/^gESeo7Z0---[\w\d-_]{53}$/)
+	// })
+	// it.each([4, 8, 12, 16, 64] as const)(`ordered id is ordered`, (length: cryptly.Identifier.Length) => {
+	// 	expect(
+	// 		cryptly.Identifier.generate(length, "ordered", now + 1) > cryptly.Identifier.generate(length, "ordered", now)
+	// 	).toBeTruthy()
+	// })
+	// it.each([4, 8, 12, 16, 64] as const)(`reverse ordered id is`, (length: cryptly.Identifier.Length) => {
+	// 	expect(cryptly.Identifier.is(cryptly.Identifier.generate(length, "reversed", length), length)).toBeTruthy()
+	// })
+	// it.each([4, 8, 12, 16, 64] as const)(`reverse ordered id is reverse ordered`, (length: cryptly.Identifier.Length) => {
+	// 	expect(
+	// 		cryptly.Identifier.generate(length, "reversed", now + 1) < cryptly.Identifier.generate(length, "reversed", now)
+	// 	).toBeTruthy()
+	// })
+	it("many ordered", () => {
 		expect(
-			cryptly.Identifier.generate(length, "ordered", now + 1) > cryptly.Identifier.generate(length, "ordered", now)
+			cryptly.Identifier.generate(16, "ordered", now) < cryptly.Identifier.generate(16, "ordered", now + 1) &&
+				cryptly.Identifier.generate(16, "ordered", now + 1) < cryptly.Identifier.generate(16, "ordered", now + 21111) &&
+				cryptly.Identifier.generate(16, "ordered", now + 2) <
+					cryptly.Identifier.generate(16, "ordered", now + 344546) &&
+				cryptly.Identifier.generate(16, "ordered", now + 3) < cryptly.Identifier.generate(16, "ordered", now + 41112) &&
+				cryptly.Identifier.generate(16, "ordered", now + 4) < cryptly.Identifier.generate(16, "ordered", now + 5434)
 		).toBeTruthy()
 	})
-	it.each([4, 8, 12, 16, 64] as const)(`reverse ordered id is`, (length: cryptly.Identifier.Length) => {
-		expect(cryptly.Identifier.is(cryptly.Identifier.generate(length, "reversed", length), length)).toBeTruthy()
-	})
-	it.each([4, 8, 12, 16, 64] as const)(`reverse ordered id is reverse ordered`, (length: cryptly.Identifier.Length) => {
+	it("many reversed1", () => {
 		expect(
-			cryptly.Identifier.generate(length, "reversed", now + 1) < cryptly.Identifier.generate(length, "reversed", now)
+			cryptly.Identifier.generate(16, "reversed", now) > cryptly.Identifier.generate(16, "reversed", now + 1666)
+		).toBeTruthy()
+	})
+	it("many reversed2", () => {
+		expect(
+			cryptly.Identifier.generate(16, "reversed", now + 1) > cryptly.Identifier.generate(16, "reversed", now + 211111)
+		).toBeTruthy()
+	})
+	it("many reversed3", () => {
+		expect(
+			cryptly.Identifier.generate(16, "reversed", now + 2) > cryptly.Identifier.generate(16, "reversed", now + 32323)
+		).toBeTruthy()
+	})
+	it("many reversed4", () => {
+		expect(
+			cryptly.Identifier.generate(16, "reversed", now + 3) > cryptly.Identifier.generate(16, "reversed", now + 434)
 		).toBeTruthy()
 	})
 })

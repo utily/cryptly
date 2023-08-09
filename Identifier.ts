@@ -43,8 +43,10 @@ export namespace Identifier {
 		value?: number | Uint8Array | string
 	): Identifier {
 		let result: Identifier | undefined = undefined
-		if (value || value == 0 || value == "")
+		if (value || value == 0 || value == "") {
+			value = typeof value == "number" ? new Uint8Array(new BigUint64Array([BigInt(value)]).buffer).reverse() : value
 			result = Base64.encode(value, ordering).substring(0, length)
+		}
 		return (
 			(result ?? "") +
 			fromBinary(crypto.getRandomValues(new Uint8Array((length / 4) * 3)), ordering).substring(
