@@ -25,6 +25,10 @@ describe("Base64", () => {
 		})
 	})
 	it(`encode ordered`, () => {
+		expect(cryptly.Base64.encode("2023-08-09T14:39:51.473Z", "ordered")).toEqual("BY-mBmokD1okDKFlC2cnDIcpBHsoCnCP")
+		expect(cryptly.Base64.encode("2023-08-09T14:39:51.474Z", "ordered")).toEqual("BY-mBmokD1okDKFlC2cnDIcpBHsoCnGP")
+	})
+	it(`encode ordered`, () => {
 		expect(cryptly.Base64.encode("This is the data (*)", "ordered", "=")).not.toEqual("VGhpcyBpcyB0aGUgZGF0YSAoKik=")
 		expect(cryptly.Base64.encode("This is the data (*)", "ordered")).toEqual("K5WdRm0dRm0oP5JVO54oNH-c9XZ")
 	})

@@ -35,7 +35,8 @@ export namespace Identifier {
 	export function generate(
 		length: Length,
 		ordering: Extract<Base64.Standard, "ordered" | "reversed">,
-		value: number | Uint8Array | string
+		value: number | Uint8Array | string,
+		bitPrecision?: number
 	): Identifier
 	export function generate(
 		length: Length,
