@@ -14,15 +14,16 @@ export function encode(
 	padding: "" | "=" | "-" = ""
 ): string {
 	let data: Uint8Array
+	const reverse = (array: Uint8Array) => (standard == "ordered" || standard == "reversed" ? array.reverse() : array)
 	switch (typeof value) {
 		case "string":
 			data = new TextEncoder().encode(value)
 			break
 		case "number":
-			data = new Uint8Array(new BigUint64Array([BigInt(value)]).buffer)
+			data = reverse(new Uint8Array(new BigUint64Array([BigInt(value)]).buffer))
 			break
 		case "bigint":
-			data = new Uint8Array(new BigUint64Array([value]).buffer)
+			data = reverse(new Uint8Array(new BigUint64Array([value]).buffer))
 			break
 		default:
 			data = value instanceof Uint8Array ? value : new Uint8Array(value)
