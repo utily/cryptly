@@ -92,17 +92,24 @@ describe("Identifier", () => {
 	it.each([4, 8, 12, 16, 64] as const)(`ordered id is`, (length: cryptly.Identifier.Length) => {
 		expect(cryptly.Identifier.is(cryptly.Identifier.generate(length, "ordered", length), length)).toBeTruthy()
 	})
-	const now = 1691418818480
+	const time = 1691418818480
 	it("pattern", () => {
-		expect(cryptly.Identifier.generate(4, "ordered", now)).toMatch(/^gESe$/)
-		expect(cryptly.Identifier.generate(8, "ordered", now)).toMatch(/^gESeo7Z0$/)
-		expect(cryptly.Identifier.generate(12, "ordered", now)).toMatch(/^gESeo7Z0---[\w\d-_]{1}$/)
-		expect(cryptly.Identifier.generate(16, "ordered", now)).toMatch(/^gESeo7Z0---[\w\d-_]{5}$/)
-		expect(cryptly.Identifier.generate(64, "ordered", now)).toMatch(/^gESeo7Z0---[\w\d-_]{53}$/)
+		expect(cryptly.Identifier.generate(4, "ordered", time)).toMatch(/^---0$/)
+		expect(cryptly.Identifier.generate(8, "ordered", time)).toMatch(/^---0XS0e$/)
+		expect(cryptly.Identifier.generate(12, "ordered", time)).toMatch(/^---0XS0exv[\w\d-_]{2}$/)
+		expect(cryptly.Identifier.generate(16, "ordered", time)).toMatch(/^---0XS0exv[\w\d-_]{6}$/)
+		expect(cryptly.Identifier.generate(64, "ordered", time)).toMatch(/^---0XS0exv[\w\d-_]{54}$/)
+	})
+	it("pattern", () => {
+		expect(cryptly.Identifier.generate(4, "reversed", time)).toMatch(/^zzzy$/)
+		expect(cryptly.Identifier.generate(8, "reversed", time)).toMatch(/^zzzySXyK$/)
+		expect(cryptly.Identifier.generate(12, "reversed", time)).toMatch(/^zzzySXyK13z[\w\d-_]{1}$/)
+		expect(cryptly.Identifier.generate(16, "reversed", time)).toMatch(/^zzzySXyK13z[\w\d-_]{5}$/)
+		expect(cryptly.Identifier.generate(64, "reversed", time)).toMatch(/^zzzySXyK13z[\w\d-_]{53}$/)
 	})
 	it.each([4, 8, 12, 16, 64] as const)(`ordered id is ordered`, (length: cryptly.Identifier.Length) => {
 		expect(
-			cryptly.Identifier.generate(length, "ordered", now + 1) > cryptly.Identifier.generate(length, "ordered", now)
+			cryptly.Identifier.generate(length, "ordered", time + 1) >= cryptly.Identifier.generate(length, "ordered", time)
 		).toBeTruthy()
 	})
 	it.each([4, 8, 12, 16, 64] as const)(`reverse ordered id is`, (length: cryptly.Identifier.Length) => {
@@ -110,7 +117,39 @@ describe("Identifier", () => {
 	})
 	it.each([4, 8, 12, 16, 64] as const)(`reverse ordered id is reverse ordered`, (length: cryptly.Identifier.Length) => {
 		expect(
-			cryptly.Identifier.generate(length, "reversed", now + 1) < cryptly.Identifier.generate(length, "reversed", now)
+			cryptly.Identifier.generate(length, "reversed", time + 1) <= cryptly.Identifier.generate(length, "reversed", time)
+		).toBeTruthy()
+	})
+	it("many ordered", () => {
+		expect(
+			cryptly.Identifier.generate(16, "ordered", time) < cryptly.Identifier.generate(16, "ordered", time + 1) &&
+				cryptly.Identifier.generate(16, "ordered", time + 1) <
+					cryptly.Identifier.generate(16, "ordered", time + 21111) &&
+				cryptly.Identifier.generate(16, "ordered", time + 2) <
+					cryptly.Identifier.generate(16, "ordered", time + 344546) &&
+				cryptly.Identifier.generate(16, "ordered", time + 3) <
+					cryptly.Identifier.generate(16, "ordered", time + 41112) &&
+				cryptly.Identifier.generate(16, "ordered", time + 4) < cryptly.Identifier.generate(16, "ordered", time + 5434)
+		).toBeTruthy()
+	})
+	it("many reversed1", () => {
+		expect(
+			cryptly.Identifier.generate(16, "reversed", time) > cryptly.Identifier.generate(16, "reversed", time + 1666)
+		).toBeTruthy()
+	})
+	it("many reversed2", () => {
+		expect(
+			cryptly.Identifier.generate(16, "reversed", time + 1) > cryptly.Identifier.generate(16, "reversed", time + 211111)
+		).toBeTruthy()
+	})
+	it("many reversed3", () => {
+		expect(
+			cryptly.Identifier.generate(16, "reversed", time + 2) > cryptly.Identifier.generate(16, "reversed", time + 32323)
+		).toBeTruthy()
+	})
+	it("many reversed4", () => {
+		expect(
+			cryptly.Identifier.generate(16, "reversed", time + 3) > cryptly.Identifier.generate(16, "reversed", time + 434)
 		).toBeTruthy()
 	})
 })
