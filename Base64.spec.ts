@@ -33,8 +33,8 @@ describe("Base64", () => {
 		expect(cryptly.Base64.encode("This is the data (*)", "ordered")).toEqual("K5WdRm0dRm0oP5JVO54oNH-c9XZ")
 	})
 	it("encode reversed", () => {
-		expect(cryptly.Base64.encode("This is the data (*)", "reversed", "=")).not.toEqual("VGhpcyBpcyB0aGUgZGF0YSAoKik=")
-		expect(cryptly.Base64.encode("This is the data (*)", "reversed", "=")).toEqual("etTLYCyLYCyA_tfUatuAbhzMpSQ=")
+		expect(cryptly.Base64.encode(1694178230, "reversed")).toEqual("zzzzztg3t3b")
+		expect(Number(new BigUint64Array(cryptly.Base64.decode("zzzzztg3t3b", "reversed").buffer))).toEqual(1694178230)
 	})
 	it("encode url", () =>
 		expect(cryptly.Base64.encode("This is the data (*)", "url", "")).toEqual("VGhpcyBpcyB0aGUgZGF0YSAoKik"))
