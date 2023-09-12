@@ -41,7 +41,7 @@ export function encode(
 		result.push(table[c2 & 63])
 	}
 	const length = Math.ceil((data.length / 3) * 4)
-	return result.join("").substr(0, length) + padding.repeat(result.length - length)
+	return result.join("").substring(0, length) + padding.repeat(result.length - length)
 }
 export function decode(value: string, standard: Standard = "standard"): Uint8Array {
 	while (value.endsWith("=") && value.length > 0)
@@ -58,7 +58,7 @@ export function decode(value: string, standard: Standard = "standard"): Uint8Arr
 		result[c + 1] = ((d1 & 15) << 4) | (d2 >>> 2)
 		result[c + 2] = ((d2 & 3) << 6) | d3
 	}
-	return result
+	return standard == "ordered" || standard == "reversed" ? result.reverse() : result
 }
 export function next(value: string, increment = 1, standard: Standard = "standard"): string {
 	const table = tables[standard]
