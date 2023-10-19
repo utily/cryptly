@@ -13,3 +13,4 @@ echo >dist/mjs/package.json '{
 		"./crypto": "./crypto.browser"
 	}
 }'
+
