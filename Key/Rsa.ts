@@ -46,7 +46,7 @@ export class Rsa {
 	}
 	static async import(
 		type: "private" | "public",
-		key: Uint8Array | string | undefined,
+		key: ArrayBuffer | string | undefined,
 		variant?: Rsa.Variant,
 		hash?: Hash
 	): Promise<Rsa | undefined> {
@@ -60,7 +60,7 @@ export class Rsa {
 				await crypto.subtle.importKey(
 					type == "private" ? "pkcs8" : "spki",
 					key,
-					{ name: parameters.name, ...(hash ? { hash: { name: hash } } : {}) },
+					{ name: parameters.name, hash: { name: hash ?? "SHA-256" } },
 					true,
 					hash ? [type == "private" ? "sign" : "verify"] : [type == "private" ? "decrypt" : "encrypt"]
 				),
@@ -90,6 +90,17 @@ export namespace Rsa {
 	export type Pair = {
 		private: Rsa
 		public: Rsa
+	}
+	export namespace Pair {
+		export async function load(
+			publicKey: string | ArrayBuffer,
+			privateKey: string | ArrayBuffer
+		): Promise<Partial<Pair>> {
+			return {
+				public: await Rsa.import("public", publicKey),
+				private: await Rsa.import("private", privateKey),
+			}
+		}
 	}
 	export type Variant = "SSA" | "PSS"
 	export type Parameters =
