@@ -4,9 +4,9 @@ import { crypto } from "../crypto"
 import { TextEncoder } from "../TextEncoder"
 import { Algorithm } from "./Algorithm"
 
-export class Digest {
+export class Digester {
 	get length(): number {
-		return Digest.lengths[this.algorithm]
+		return Digester.lengths[this.algorithm]
 	}
 	constructor(readonly algorithm: Algorithm) {}
 	async digest(data: string, base: 16 | Base64.Standard): Promise<string>
