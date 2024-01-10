@@ -1,14 +1,14 @@
-import { Algorithm } from "./Algorithm"
+import { Encrypter } from "./Encrypter"
 import { Tuple2 } from "./Tuple"
 
-export type Algorithms = Record<string, Algorithm> & { current: Algorithm }
+export type Encrypters = Record<string, Encrypter.Aes> & { current: Encrypter.Aes }
 
-export namespace Algorithms {
+export namespace Encrypters {
 	export function create(
-		create: (keys: string[]) => Algorithm,
+		create: (keys: string[]) => Encrypter.Aes,
 		current: string,
 		...secrets: string[] | Record<string, any>[]
-	): Algorithms {
+	): Encrypters {
 		const [first, ...remainder] = isStringArray(secrets)
 			? secrets.map(part =>
 					Object.fromEntries(part.split(",").map(secret => secret.split(":", 2).map(item => item.trim())))
