@@ -17,10 +17,18 @@ export class Rsa extends Base {
 	}
 	async export(type: "private" | "public", format: "jwk"): Promise<JsonWebKey | undefined>
 	async export(type: "private" | "public", format: "buffer"): Promise<ArrayBuffer | undefined>
-	async export(type: "private" | "public", format?: "base64" | "pem"): Promise<string | undefined>
 	async export(
 		type: "private" | "public",
-		format: "jwk" | "buffer" | "base64" | "pem" = "base64"
+		format?: { type: "base64"; encoding: "standard" } | { type: "base64"; encoding: "url" } | "pem"
+	): Promise<string | undefined>
+	async export(
+		type: "private" | "public",
+		format:
+			| "jwk"
+			| "buffer"
+			| { type: "base64"; encoding: "standard" }
+			| { type: "base64"; encoding: "url" }
+			| "pem" = { type: "base64", encoding: "standard" }
 	): Promise<JsonWebKey | ArrayBuffer | string | undefined> {
 		const key = (await this.keys)[type]
 		return key?.export(format)

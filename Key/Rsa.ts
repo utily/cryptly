@@ -10,37 +10,45 @@ export class Rsa {
 	) {}
 	async export(format: "jwk"): Promise<JsonWebKey | undefined>
 	async export(format: "buffer"): Promise<ArrayBuffer | undefined>
-	async export(format?: "base64" | "pem"): Promise<string | undefined>
-	async export(format: "jwk" | "buffer" | "base64" | "pem"): Promise<JsonWebKey | ArrayBuffer | string | undefined>
 	async export(
-		format: "jwk" | "buffer" | "base64" | "pem" = "base64"
+		format?: { type: "base64"; encoding: "standard" } | { type: "base64"; encoding: "url" } | "pem"
+	): Promise<string | undefined>
+	async export(
+		format: "jwk" | "buffer" | { type: "base64"; encoding: "standard" } | { type: "base64"; encoding: "url" } | "pem"
+	): Promise<JsonWebKey | ArrayBuffer | string | undefined>
+	async export(
+		format:
+			| "jwk"
+			| "buffer"
+			| { type: "base64"; encoding: "standard" }
+			| { type: "base64"; encoding: "url" }
+			| "pem" = { type: "base64", encoding: "standard" }
 	): Promise<JsonWebKey | ArrayBuffer | string | undefined> {
 		let result: JsonWebKey | ArrayBuffer | string | undefined
-		switch (format) {
-			case "jwk":
-				result = await crypto.subtle.exportKey("jwk", this.raw)
-				break
-			case "buffer":
-				result = await crypto.subtle.exportKey(this.type == "private" ? "pkcs8" : "spki", this.raw)
-				break
-			case "base64":
-				{
-					const data = await this.export("buffer")
-					result = data && Base64.encode(new Uint8Array(data), "standard", "=")
-				}
-				break
-			case "pem":
-				{
-					const data = await this.export("base64")
-					result =
-						data &&
-						[
-							`-----BEGIN ${this.type.toUpperCase()} KEY-----`,
-							...slice(data, 64),
-							`-----END ${this.type.toUpperCase()} KEY-----`,
-						].join("\n")
-				}
-				break
+		if (typeof format == "string")
+			switch (format) {
+				case "jwk":
+					result = await crypto.subtle.exportKey("jwk", this.raw)
+					break
+				case "buffer":
+					result = await crypto.subtle.exportKey(this.type == "private" ? "pkcs8" : "spki", this.raw)
+					break
+				case "pem":
+					{
+						const data = await this.export({ type: "base64", encoding: "standard" })
+						result =
+							data &&
+							[
+								`-----BEGIN ${this.type.toUpperCase()} KEY-----`,
+								...slice(data, 64),
+								`-----END ${this.type.toUpperCase()} KEY-----`,
+							].join("\n")
+					}
+					break
+			}
+		else {
+			const data = await this.export("buffer")
+			result = data && Base64.encode(new Uint8Array(data), format.encoding, format.encoding == "url" ? "" : "=")
 		}
 		return result
 	}
