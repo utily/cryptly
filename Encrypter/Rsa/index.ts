@@ -40,27 +40,41 @@ export class Rsa {
 			  )
 			: undefined
 	}
-	async export(type: "private" | "public"): Promise<string | undefined>
-	async export(): Promise<{ public: string | undefined; private: string | undefined }>
+	async export(type: "private" | "public", standard?: Base64.Standard): Promise<string | undefined>
+	async export(standard?: Base64.Standard): Promise<{ public: string | undefined; private: string | undefined }>
 	async export(
-		type?: "private" | "public"
+		type?: "private" | "public" | Base64.Standard,
+		standard?: Base64.Standard
 	): Promise<string | undefined | { public: string | undefined; private: string | undefined }> {
-		return type
-			? (await this.keys)[type]?.export()
+		return type == "private" || type == "public"
+			? (await this.keys)[type]?.export(standard && { type: "base64", standard: standard ?? "standard" })
 			: Object.fromEntries(
-					await Promise.all(Object.entries(await this.keys).map(async ([type, key]) => [type, await key?.export()]))
+					await Promise.all(
+						Object.entries(await this.keys).map(async ([keyType, key]) => [
+							keyType,
+							await key?.export(type && { type: "base64", standard: type ?? "standard" }),
+						])
+					)
 			  )
 	}
 	static generate(key: 1024 | 2048 | 4096): Rsa {
 		return new Rsa(Key.Rsa.generate(key))
 	}
-	static import(type: "public" | "private", key: string | ArrayBuffer): Rsa
-	static import(publicKey: string | ArrayBuffer, privateKey: string | ArrayBuffer): Rsa
-	static import(type: "public" | "private" | string | ArrayBuffer, key: string | ArrayBuffer): Rsa {
+	static import(type: "public" | "private", key: string | ArrayBuffer, encodingStandard?: Base64.Standard): Rsa
+	static import(
+		publicKey: string | ArrayBuffer,
+		privateKey: string | ArrayBuffer,
+		encodingStandard?: Base64.Standard
+	): Rsa
+	static import(
+		type: "public" | "private" | string | ArrayBuffer,
+		key: string | ArrayBuffer,
+		encodingStandard?: Base64.Standard
+	): Rsa {
 		return new Rsa(
 			type == "public" || type == "private"
-				? Key.Rsa.import(type, key).then(result => ({ [type]: result }))
-				: Key.Rsa.Pair.load(type, key)
+				? Key.Rsa.import(type, key, undefined, undefined, encodingStandard).then(result => ({ [type]: result }))
+				: Key.Rsa.Pair.load(type, key, encodingStandard)
 		)
 	}
 }

@@ -1,4 +1,5 @@
 import { Base64 } from "../cryptly"
+import { Standard } from "../Base64"
 import { crypto } from "../crypto"
 import { Hash } from "../Signer/Hash"
 
@@ -10,19 +11,12 @@ export class Rsa {
 	) {}
 	async export(format: "jwk"): Promise<JsonWebKey | undefined>
 	async export(format: "buffer"): Promise<ArrayBuffer | undefined>
+	async export(format?: { type: "base64"; standard: Standard } | "pem"): Promise<string | undefined>
 	async export(
-		format?: { type: "base64"; encoding: "standard" } | { type: "base64"; encoding: "url" } | "pem"
-	): Promise<string | undefined>
-	async export(
-		format: "jwk" | "buffer" | { type: "base64"; encoding: "standard" } | { type: "base64"; encoding: "url" } | "pem"
+		format: "jwk" | "buffer" | { type: "base64"; standard: Standard } | "pem"
 	): Promise<JsonWebKey | ArrayBuffer | string | undefined>
 	async export(
-		format:
-			| "jwk"
-			| "buffer"
-			| { type: "base64"; encoding: "standard" }
-			| { type: "base64"; encoding: "url" }
-			| "pem" = { type: "base64", encoding: "standard" }
+		format: "jwk" | "buffer" | { type: "base64"; standard: Standard } | "pem" = { type: "base64", standard: "standard" }
 	): Promise<JsonWebKey | ArrayBuffer | string | undefined> {
 		let result: JsonWebKey | ArrayBuffer | string | undefined
 		if (typeof format == "string")
@@ -35,7 +29,7 @@ export class Rsa {
 					break
 				case "pem":
 					{
-						const data = await this.export({ type: "base64", encoding: "standard" })
+						const data = await this.export({ type: "base64", standard: "standard" })
 						result =
 							data &&
 							[
@@ -48,7 +42,7 @@ export class Rsa {
 			}
 		else {
 			const data = await this.export("buffer")
-			result = data && Base64.encode(new Uint8Array(data), format.encoding, format.encoding == "url" ? "" : "=")
+			result = data && Base64.encode(new Uint8Array(data), format.standard, format.standard == "url" ? "" : "=")
 		}
 		return result
 	}
@@ -56,10 +50,11 @@ export class Rsa {
 		type: "private" | "public",
 		key: ArrayBuffer | string | undefined,
 		variant?: Rsa.Variant,
-		hash?: Hash
+		hash?: Hash,
+		encodingStandard?: Standard
 	): Promise<Rsa | undefined> {
 		if (typeof key == "string")
-			key = Base64.decode(key)
+			key = Base64.decode(key, encodingStandard)
 		const parameters = getParameters(variant)
 		return (
 			key &&
@@ -102,11 +97,12 @@ export namespace Rsa {
 	export namespace Pair {
 		export async function load(
 			publicKey: string | ArrayBuffer,
-			privateKey: string | ArrayBuffer
+			privateKey: string | ArrayBuffer,
+			encodingStandard?: Standard
 		): Promise<Partial<Pair>> {
 			return {
-				public: await Rsa.import("public", publicKey),
-				private: await Rsa.import("private", privateKey),
+				public: await Rsa.import("public", publicKey, undefined, undefined, encodingStandard),
+				private: await Rsa.import("private", privateKey, undefined, undefined, encodingStandard),
 			}
 		}
 	}
