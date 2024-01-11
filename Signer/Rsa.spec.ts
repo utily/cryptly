@@ -23,8 +23,8 @@ describe("Algorithm.RS256", () => {
 		const algorithm = Signer.generate("RSA", "SHA-256", 1024)
 		expect(await algorithm.verify(message, await algorithm.sign(message))).toEqual(true)
 		const exported = {
-			public: await algorithm.export("public", { type: "base64", standard: "standard" }),
-			private: await algorithm.export("private", { type: "base64", standard: "standard" }),
+			public: await algorithm.export("public", "base64"),
+			private: await algorithm.export("private", "base64"),
 		}
 		expect(exported.public).toMatch(/MI[A-Z,a-z,0-9,+,/]+=*/g)
 		expect(exported.private).toMatch(/MI[A-Z,a-z,0-9,+,/]+=*/g)
