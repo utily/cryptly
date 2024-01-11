@@ -1,4 +1,5 @@
 import { Base64 } from "../cryptly"
+import { Standard } from "../Base64"
 import { crypto } from "../crypto"
 import { Hash } from "../Signer/Hash"
 
@@ -10,48 +11,50 @@ export class Rsa {
 	) {}
 	async export(format: "jwk"): Promise<JsonWebKey | undefined>
 	async export(format: "buffer"): Promise<ArrayBuffer | undefined>
-	async export(format?: "base64" | "pem"): Promise<string | undefined>
-	async export(format: "jwk" | "buffer" | "base64" | "pem"): Promise<JsonWebKey | ArrayBuffer | string | undefined>
+	async export(format?: { type: "base64"; standard: Standard } | "pem"): Promise<string | undefined>
 	async export(
-		format: "jwk" | "buffer" | "base64" | "pem" = "base64"
+		format: "jwk" | "buffer" | { type: "base64"; standard: Standard } | "pem"
+	): Promise<JsonWebKey | ArrayBuffer | string | undefined>
+	async export(
+		format: "jwk" | "buffer" | { type: "base64"; standard: Standard } | "pem" = { type: "base64", standard: "standard" }
 	): Promise<JsonWebKey | ArrayBuffer | string | undefined> {
 		let result: JsonWebKey | ArrayBuffer | string | undefined
-		switch (format) {
-			case "jwk":
-				result = await crypto.subtle.exportKey("jwk", this.raw)
-				break
-			case "buffer":
-				result = await crypto.subtle.exportKey(this.type == "private" ? "pkcs8" : "spki", this.raw)
-				break
-			case "base64":
-				{
-					const data = await this.export("buffer")
-					result = data && Base64.encode(new Uint8Array(data), "standard", "=")
-				}
-				break
-			case "pem":
-				{
-					const data = await this.export("base64")
-					result =
-						data &&
-						[
-							`-----BEGIN ${this.type.toUpperCase()} KEY-----`,
-							...slice(data, 64),
-							`-----END ${this.type.toUpperCase()} KEY-----`,
-						].join("\n")
-				}
-				break
+		if (typeof format == "string")
+			switch (format) {
+				case "jwk":
+					result = await crypto.subtle.exportKey("jwk", this.raw)
+					break
+				case "buffer":
+					result = await crypto.subtle.exportKey(this.type == "private" ? "pkcs8" : "spki", this.raw)
+					break
+				case "pem":
+					{
+						const data = await this.export({ type: "base64", standard: "standard" })
+						result =
+							data &&
+							[
+								`-----BEGIN ${this.type.toUpperCase()} KEY-----`,
+								...slice(data, 64),
+								`-----END ${this.type.toUpperCase()} KEY-----`,
+							].join("\n")
+					}
+					break
+			}
+		else {
+			const data = await this.export("buffer")
+			result = data && Base64.encode(new Uint8Array(data), format.standard, format.standard == "url" ? "" : "=")
 		}
 		return result
 	}
 	static async import(
 		type: "private" | "public",
-		key: Uint8Array | string | undefined,
+		key: ArrayBuffer | string | undefined,
 		variant?: Rsa.Variant,
-		hash?: Hash
+		hash?: Hash,
+		encodingStandard?: Standard
 	): Promise<Rsa | undefined> {
 		if (typeof key == "string")
-			key = Base64.decode(key)
+			key = Base64.decode(key, encodingStandard)
 		const parameters = getParameters(variant)
 		return (
 			key &&
@@ -60,7 +63,7 @@ export class Rsa {
 				await crypto.subtle.importKey(
 					type == "private" ? "pkcs8" : "spki",
 					key,
-					{ name: parameters.name, ...(hash ? { hash: { name: hash } } : {}) },
+					{ name: parameters.name, hash: { name: hash ?? "SHA-256" } },
 					true,
 					hash ? [type == "private" ? "sign" : "verify"] : [type == "private" ? "decrypt" : "encrypt"]
 				),
@@ -90,6 +93,18 @@ export namespace Rsa {
 	export type Pair = {
 		private: Rsa
 		public: Rsa
+	}
+	export namespace Pair {
+		export async function load(
+			publicKey: string | ArrayBuffer,
+			privateKey: string | ArrayBuffer,
+			encodingStandard?: Standard
+		): Promise<Partial<Pair>> {
+			return {
+				public: await Rsa.import("public", publicKey, undefined, undefined, encodingStandard),
+				private: await Rsa.import("private", privateKey, undefined, undefined, encodingStandard),
+			}
+		}
 	}
 	export type Variant = "SSA" | "PSS"
 	export type Parameters =

@@ -25,7 +25,7 @@ describe("Context.PrimarySecrets", () => {
 	})
 })
 
-async function exportAll<T extends Record<string, cryptly.Encrypter>>(
+async function exportAll<T extends Record<string, cryptly.Encrypter.Aes>>(
 	secrets: T
 ): Promise<
 	{
