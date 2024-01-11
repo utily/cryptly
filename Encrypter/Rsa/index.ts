@@ -3,12 +3,12 @@ import { crypto } from "../../crypto"
 import { Key } from "../../Key"
 import { TextDecoder } from "../../TextDecoder"
 import { TextEncoder } from "../../TextEncoder"
-import { Encrypted } from "./Encrypted"
+import { Encrypted as RsaEncrypted } from "./Encrypted"
 
 export class Rsa {
 	public name?: string
 	private constructor(private readonly keys: Promise<Partial<Key.Rsa.Pair>>) {}
-	async encrypt(data: string | ArrayBuffer): Promise<Encrypted | undefined> {
+	async encrypt(data: string | ArrayBuffer): Promise<RsaEncrypted | undefined> {
 		const key = (await this.keys)?.public
 		return key
 			? {
@@ -26,9 +26,9 @@ export class Rsa {
 			  }
 			: undefined
 	}
-	async decrypt(encrypted: Encrypted): Promise<string | undefined>
+	async decrypt(encrypted: RsaEncrypted): Promise<string | undefined>
 	async decrypt(encrypted: string): Promise<string | undefined>
-	async decrypt(encrypted: Encrypted | string): Promise<string | undefined> {
+	async decrypt(encrypted: RsaEncrypted | string): Promise<string | undefined> {
 		if (typeof encrypted == "string")
 			encrypted = { value: encrypted }
 		const key = (await this.keys)?.private
@@ -77,4 +77,8 @@ export class Rsa {
 				: Key.Rsa.Pair.load(type, key, encodingStandard)
 		)
 	}
+}
+
+export namespace Rsa {
+	export type Encrypted = RsaEncrypted
 }
