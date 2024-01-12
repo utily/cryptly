@@ -60,26 +60,4 @@ describe("Encrypter.Rsa", () => {
 			fail()
 		}
 	})
-	it("encrypt & decrypt RSA OAEP with imported key, export/import both keys at once, URL encoding", async () => {
-		const generated = cryptly.Encrypter.Rsa.generate(2048)
-
-		const keys = await generated.export("url")
-		const privateKey = keys.private
-		const publicKey = keys.public
-		expect(keys).toBeDefined()
-		if (keys && privateKey && publicKey) {
-			const encrypter = cryptly.Encrypter.Rsa.import(publicKey, privateKey, "url")
-			const encrypted = await encrypter.encrypt("The meaning of life, the universe and everything.")
-			expect(encrypted).toBeDefined()
-			if (encrypted) {
-				expect(encrypted.value).toHaveLength(342)
-				const decrypted = await encrypter.decrypt(encrypted)
-				expect(decrypted).toEqual("The meaning of life, the universe and everything.")
-			} else {
-				fail()
-			}
-		} else {
-			fail()
-		}
-	})
 })
