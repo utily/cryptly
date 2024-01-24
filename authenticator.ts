@@ -3,14 +3,14 @@ import * as Base32 from "./Base32"
 import { Signer } from "./Signer"
 
 export namespace authenticator {
-	export async function generate(key: string, time = new Date().getTime()): Promise<string> {
-		const hex = Base16.decode(
-			Math.floor(time / 1000 / 30)
-				.toString(16)
-				.padStart(16, "0")
+	export async function generate(key: string, time: number): Promise<string> {
+		const hash = await Signer.create("HMAC", "SHA-1", new TextEncoder().encode(key)).sign(
+			Base16.decode(
+				Math.floor(time / 1000 / 30)
+					.toString(16)
+					.padStart(16, "0")
+			)
 		)
-		const hasher = Signer.create("HMAC", "SHA-1", new TextEncoder().encode(key))
-		const hash = await hasher.sign(hex)
 		const offset = hash[hash.length - 1] & 0xf
 		const value =
 			((hash[offset] & 0x7f) << 24) |
