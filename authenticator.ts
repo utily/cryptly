@@ -22,6 +22,6 @@ export namespace authenticator {
 		return (value % 1000000).toString().padStart(6, "0")
 	}
 	export function toQrCode(key: string, issuer: string, username: string): string {
-		return `otpauth://totp/${issuer}:${username}?secret=${Base32.encode(key)}`
+		return `otpauth://totp/${issuer}:${username}?secret=${Base32.encode(key)}&issuer=${issuer}`
 	}
 }

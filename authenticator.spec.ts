@@ -5,5 +5,8 @@ describe("authenticator", () => {
 		const time = 1706101897967
 		expect(await cryptly.authenticator.generate(key, time - 30000)).toEqual("727592")
 		expect(await cryptly.authenticator.generate(key, time)).toEqual("097958")
+		expect(cryptly.authenticator.toQrCode(key, "TestApp", "test.testsson@test.test")).toEqual(
+			"otpauth://totp/TestApp:test.testsson@test.test?secret=GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ&issuer=TestApp"
+		)
 	})
 })
