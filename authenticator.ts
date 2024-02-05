@@ -3,7 +3,7 @@ import * as Base32 from "./Base32"
 import { Signer } from "./Signer"
 
 export namespace authenticator {
-	export async function generate(key: string, time: number): Promise<string> {
+	export async function generate(key: string, time: number, length = 6): Promise<string> {
 		const hash = await Signer.create("HMAC", "SHA-1", new TextEncoder().encode(key)).sign(
 			Base16.decode(
 				Math.floor(time / 1000 / 30)
@@ -19,7 +19,17 @@ export namespace authenticator {
 			(hash[offset + 3] & 0xff)
 		// magic numbers explanation:
 		// (value % 10^digits).padstart(digits, "0")
-		return (value % 1000000).toString().padStart(6, "0")
+		return (value % +"1".padEnd(length + 1, "0")).toString().padStart(length, "0")
+	}
+	export async function generateRecoveryCodes(key: string, times: number[]): Promise<string[]> {
+		const result = Array(times.length)
+		for (let index = 0; index < times.length; index++) {
+			result[index] = await generate(key, times[index], 8)
+		}
+		return result
+	}
+	export async function useRecoveryCode(code: string, codes: string[]): Promise<string[] | false> {
+		return codes.splice(codes.indexOf(code), 1) ? codes : false
 	}
 	export function toQrCode(key: string, issuer: string, username: string): string {
 		return `otpauth://totp/${issuer}:${username}?secret=${Base32.encode(key)}&issuer=${issuer}`
