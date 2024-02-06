@@ -28,9 +28,6 @@ export namespace authenticator {
 		}
 		return result
 	}
-	export async function useRecoveryCode(code: string, codes: string[]): Promise<string[] | false> {
-		return codes.splice(codes.indexOf(code), 1) ? codes : false
-	}
 	export function toQrCode(key: string, issuer: string, username: string): string {
 		return `otpauth://totp/${issuer}:${username}?secret=${Base32.encode(key)}&issuer=${issuer}`
 	}
