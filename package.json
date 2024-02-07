@@ -1,6 +1,6 @@
 {
 	"name": "cryptly",
-	"version": "4.0.2",
+	"version": "4.0.3",
 	"description": "Fullstack encryption library.",
 	"author": "Utily Contributors",
 	"license": "MIT",
