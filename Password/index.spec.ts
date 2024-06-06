@@ -1,4 +1,4 @@
-import { cryptly } from "./index"
+import { cryptly } from "../index"
 
 describe("Password", () => {
 	const hash = {

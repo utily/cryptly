@@ -1,18 +1,17 @@
-import * as Base64 from "./Base64"
-import { crypto } from "./crypto"
+import { isly } from "isly"
+import * as Base64 from "../Base64"
+import { crypto } from "../crypto"
+import { Length as IdentifierLength } from "./Length"
 
 export type Identifier = string
 
 export namespace Identifier {
+	export import Length = IdentifierLength
+	export const type = isly.named("cryptly.Identifier", isly.string<string>(/^[a-zA-Z0-9\-_]{4,128}$/))
 	export function is(value: Identifier | any, length?: Length): value is Identifier {
-		return (
-			typeof value == "string" &&
-			(length == undefined || value.length == length) &&
-			Array.from(value).every(
-				c => (c >= "0" && c <= "9") || (c >= "A" && c <= "Z") || (c >= "a" && c <= "z") || c == "-" || c == "_"
-			)
-		)
+		return type.is(value) && (length == undefined || value.length == length)
 	}
+	export const flaw = type.flaw
 	export function fromUint24(value: number): Identifier {
 		return fromHexadecimal(value.toString(16).padStart(6, "0"))
 	}
@@ -83,46 +82,8 @@ export namespace Identifier {
 	export function previous(identifier: Identifier, decrement = 1): Identifier {
 		return next(identifier, -decrement)
 	}
-	export const length = [
-		4, 8, 12, 16, 20, 24, 28, 32, 36, 40, 44, 48, 52, 56, 60, 64, 68, 72, 76, 80, 84, 88, 92, 96, 100, 104, 108, 112,
-		116, 120, 124, 128,
-	] as Length[]
-	export type Length =
-		| 4
-		| 8
-		| 12
-		| 16
-		| 20
-		| 24
-		| 28
-		| 32
-		| 36
-		| 40
-		| 44
-		| 48
-		| 52
-		| 56
-		| 60
-		| 64
-		| 68
-		| 72
-		| 76
-		| 80
-		| 84
-		| 88
-		| 92
-		| 96
-		| 100
-		| 104
-		| 108
-		| 112
-		| 116
-		| 120
-		| 124
-		| 128
-	export namespace Length {
-		export function is(value: Length | any): value is Length {
-			return typeof value == "number" && value >= 4 && value <= 128 && (value & 252) == value
-		}
-	}
+	/**
+	 * @deprecated since version 4.0.5
+	 */
+	export const length = Length.values
 }

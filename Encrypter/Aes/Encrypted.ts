@@ -1,3 +1,5 @@
+import { isly } from "isly"
+
 export interface Encrypted {
 	key?: string
 	value: string
@@ -5,14 +7,12 @@ export interface Encrypted {
 }
 
 export namespace Encrypted {
-	export function is(value: any | Encrypted): value is Encrypted {
-		return (
-			typeof value == "object" &&
-			(value.key == undefined || typeof value.key == "string") &&
-			typeof value.value == "string" &&
-			typeof value.salt == "string"
-		)
-	}
+	export const type = isly.object<Encrypted>(
+		{ key: isly.string().optional(), value: isly.string(), salt: isly.string() },
+		"cryptly.Encrypter.Aes.Encrypted"
+	)
+	export const is = type.is
+	export const flaw = type.flaw
 	export function stringify(encrypted: Encrypted): string {
 		encrypted.key = encrypted.key && encrypted.key.length != 4 ? encrypted.key.slice(-2) : encrypted.key
 		return [encrypted.key, encrypted.salt, encrypted.value].join(".")
