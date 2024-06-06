@@ -1,4 +1,4 @@
-import { cryptly } from "./index"
+import { cryptly } from "../index"
 
 describe("Identifier", () => {
 	it("generate", () => expect(cryptly.Identifier.is(cryptly.Identifier.generate(12))).toBeTruthy())

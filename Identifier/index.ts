@@ -1,10 +1,12 @@
 import { isly } from "isly"
-import * as Base64 from "./Base64"
-import { crypto } from "./crypto"
+import * as Base64 from "../Base64"
+import { crypto } from "../crypto"
+import { Length as IdentifierLength } from "./Length"
 
 export type Identifier = string
 
 export namespace Identifier {
+	export import Length = IdentifierLength
 	export const type = isly.named("cryptly.Identifier", isly.string<string>(/^[a-zA-Z0-9\-_]{4,128}$/))
 	export function is(value: Identifier | any, length?: Length): value is Identifier {
 		return type.is(value) && (length == undefined || value.length == length)
@@ -79,16 +81,6 @@ export namespace Identifier {
 	}
 	export function previous(identifier: Identifier, decrement = 1): Identifier {
 		return next(identifier, -decrement)
-	}
-	export type Length = typeof Length.values[number]
-	export namespace Length {
-		export const values = [
-			4, 8, 12, 16, 20, 24, 28, 32, 36, 40, 44, 48, 52, 56, 60, 64, 68, 72, 76, 80, 84, 88, 92, 96, 100, 104, 108, 112,
-			116, 120, 124, 128,
-		] as const
-		export const type = isly.named("cryptly.Identifier", isly.number<Length>(values as any as number[]))
-		export const is = type.is
-		export const flaw = type.flaw
 	}
 	/**
 	 * @deprecated since version 4.0.5
