@@ -1,9 +1,12 @@
 import { isly } from "isly"
-import * as Base64 from "./Base64"
-import { crypto } from "./crypto"
+import * as Base64 from "../Base64"
+import { crypto } from "../crypto"
+import { Hash as PasswordHash } from "./Hash"
 
 export type Password = string | Password.Hash
+
 export namespace Password {
+	export import Hash = PasswordHash
 	export const type = isly.named("cryptly.Password", isly.union<Password>(isly.string(), Hash.type))
 	export const is = type.is
 	export const flaw = type.flaw
@@ -26,19 +29,10 @@ export namespace Password {
 	): Promise<boolean> {
 		return (await Password.hash(algorithm, password, hash.salt)).hash == hash.hash
 	}
-	export interface Hash {
-		hash: string
-		salt: string
-	}
 	export namespace Hashed {
 		/**
 		 * @deprecated since version 4.0.5
 		 */
-		export const is = type.is
-	}
-	export namespace Hash {
-		export const type = isly.object<Hash>({ hash: isly.string(), salt: isly.string() }, "cryptly.Password.Hash")
-		export const is = type.is
-		export const flaw = type.flaw
+		export const is = Hash.type.is
 	}
 }

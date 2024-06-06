@@ -5,7 +5,7 @@ import { crypto } from "./crypto"
 export type Identifier = string
 
 export namespace Identifier {
-	export const type = isly.named("cryptly.Identifier", isly.string<string>())
+	export const type = isly.named("cryptly.Identifier", isly.string<string>(/^[a-zA-Z0-9\-_]{4,128}$/))
 	export function is(value: Identifier | any, length?: Length): value is Identifier {
 		return type.is(value) && (length == undefined || value.length == length)
 	}
@@ -80,10 +80,6 @@ export namespace Identifier {
 	export function previous(identifier: Identifier, decrement = 1): Identifier {
 		return next(identifier, -decrement)
 	}
-	/**
-	 * @deprecated since version 4.0.5
-	 */
-	export const length = Length.values
 	export type Length = typeof Length.values[number]
 	export namespace Length {
 		export const values = [
@@ -94,4 +90,8 @@ export namespace Identifier {
 		export const is = type.is
 		export const flaw = type.flaw
 	}
+	/**
+	 * @deprecated since version 4.0.5
+	 */
+	export const length = Length.values
 }
