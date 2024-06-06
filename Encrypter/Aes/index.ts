@@ -106,5 +106,5 @@ export class Aes {
 }
 
 export namespace Aes {
-	export type Encrypted = AesEncrypted
+	export import Encrypted = AesEncrypted
 }

@@ -20,7 +20,7 @@ export class Digester {
 			result = new Uint8Array(await crypto.subtle.digest(this.algorithm, data))
 		return result
 	}
-	private static lengths: { [algorithm in Algorithm]: number } = {
+	private static lengths: Record<Algorithm, number> = {
 		"SHA-1": 128,
 		"SHA-256": 256,
 		"SHA-384": 384,

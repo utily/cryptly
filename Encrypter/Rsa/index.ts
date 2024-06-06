@@ -66,5 +66,5 @@ export class Rsa {
 }
 
 export namespace Rsa {
-	export type Encrypted = RsaEncrypted
+	export import Encrypted = RsaEncrypted
 }

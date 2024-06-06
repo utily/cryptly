@@ -3,7 +3,7 @@ import { cryptly } from "./index"
 describe("Identifier", () => {
 	it("generate", () => expect(cryptly.Identifier.is(cryptly.Identifier.generate(12))).toBeTruthy())
 	it("generate lengths", () => {
-		for (const length of cryptly.Identifier.length) {
+		for (const length of cryptly.Identifier.Length.values) {
 			const identifier = cryptly.Identifier.generate(length)
 			expect(identifier).toHaveLength(length)
 			expect(cryptly.Identifier.fromBinary(cryptly.Identifier.toBinary(identifier))).toEqual(identifier)
