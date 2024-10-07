@@ -39,7 +39,8 @@ export function encode(
 			bits -= 5
 		}
 	}
-	bits > 0 && (result += table[(value << (5 - bits)) & 31])
+	if (bits > 0)
+		result += table[(value << (5 - bits)) & 31]
 	while (padding && result.length % 8 != 0)
 		result += "="
 	return result
