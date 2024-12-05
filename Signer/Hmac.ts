@@ -3,7 +3,7 @@ import { crypto } from "../crypto"
 import { Hash } from "./Hash"
 import { Symmetric } from "./Symmetric"
 
-export class HMAC extends Symmetric {
+export class Hmac extends Symmetric {
 	private key: PromiseLike<CryptoKey>
 	constructor(private readonly hash: Hash, key: Uint8Array | string) {
 		super()

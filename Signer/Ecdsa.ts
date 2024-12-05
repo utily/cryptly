@@ -3,7 +3,7 @@ import { crypto } from "../crypto"
 import { Base } from "./Base"
 import { Hash } from "./Hash"
 
-export class ECDSA extends Base {
+export class Ecdsa extends Base {
 	private publicKey: PromiseLike<CryptoKey>
 	private privateKey: PromiseLike<CryptoKey>
 	constructor(

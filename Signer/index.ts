@@ -1,8 +1,8 @@
 import { Algorithm as SignerAlgorithm } from "./Algorithm"
 import { Base } from "./Base"
-import { ECDSA } from "./ECDSA"
+import { Ecdsa } from "./Ecdsa"
 import { Hash as SignerHash } from "./Hash"
-import { HMAC } from "./HMAC"
+import { Hmac } from "./Hmac"
 import { None } from "./None"
 import { Rsa } from "./Rsa"
 
@@ -63,7 +63,7 @@ export namespace Signer {
 		if (hash != undefined)
 			switch (algorithm) {
 				case "HMAC":
-					result = new HMAC(hash, keys[0])
+					result = new Hmac(hash, keys[0])
 					break
 				case "RSA":
 					result = Rsa.import("SSA", hash, keys[0], keys[1])
@@ -72,7 +72,7 @@ export namespace Signer {
 					result = Rsa.import("PSS", hash, keys[0], keys[1])
 					break
 				case "ECDSA":
-					result = new ECDSA(hash, keys[0], keys[1])
+					result = new Ecdsa(hash, keys[0], keys[1])
 					break
 			}
 		else if (algorithm == "None")
