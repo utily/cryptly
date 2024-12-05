@@ -1,4 +1,4 @@
-import { cryptly } from "./index"
+import { cryptly } from "../index"
 
 describe("Base64", () => {
 	it("xor same length", () => {

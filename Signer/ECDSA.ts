@@ -1,4 +1,4 @@
-import * as Base64 from "../Base64"
+import { Base64 } from "../Base64"
 import { crypto } from "../crypto"
 import { Base } from "./Base"
 import { Hash } from "./Hash"

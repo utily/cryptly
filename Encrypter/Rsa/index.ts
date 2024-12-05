@@ -1,8 +1,6 @@
-import * as Base64 from "../../Base64"
+import { Base64 } from "../../Base64"
 import { crypto } from "../../crypto"
 import { Key } from "../../Key"
-import { TextDecoder } from "../../TextDecoder"
-import { TextEncoder } from "../../TextEncoder"
 import { Encrypted as RsaEncrypted } from "./Encrypted"
 
 export class Rsa {

@@ -1,4 +1,4 @@
-import { cryptly } from "./index"
+import { cryptly } from "../index"
 
 describe("Base64", () => {
 	it("encode standard =", () =>
@@ -39,11 +39,11 @@ describe("Base64", () => {
 	it("encode url", () =>
 		expect(cryptly.Base64.encode("This is the data (*)", "url", "")).toEqual("VGhpcyBpcyB0aGUgZGF0YSAoKik"))
 	it("decode url", () =>
-		expect(new cryptly.TextDecoder().decode(cryptly.Base64.decode("VGhpcyBpcyB0aGUgZGF0YSAoKik", "url"))).toEqual(
+		expect(new TextDecoder().decode(cryptly.Base64.decode("VGhpcyBpcyB0aGUgZGF0YSAoKik", "url"))).toEqual(
 			"This is the data (*)"
 		))
 	it("decode standard =", () =>
-		expect(new cryptly.TextDecoder().decode(cryptly.Base64.decode("VGhpcyBpcyB0aGUgZGF0YSAoKik==", "url"))).toEqual(
+		expect(new TextDecoder().decode(cryptly.Base64.decode("VGhpcyBpcyB0aGUgZGF0YSAoKik==", "url"))).toEqual(
 			"This is the data (*)"
 		))
 	it("decode DvT", () => expect(cryptly.Base64.decode("DvQ", "url")).toEqual(Uint8Array.from([14, 244])))

@@ -1,5 +1,4 @@
-import { Encrypter } from "./Encrypter"
-import { Tuple2 } from "./Tuple"
+import { Encrypter } from "../Encrypter"
 
 export type Encrypters = Record<string, Encrypter.Aes> & { current: Encrypter.Aes }
 
@@ -17,7 +16,7 @@ export namespace Encrypters {
 		const result = Object.assign(
 			{},
 			...Object.entries(first)
-				.map<Tuple2<string, string[]>>(([name, secret]) => [
+				.map<[string, string[]]>(([name, secret]) => [
 					name,
 					[secret, ...remainder.map(part => part[name]).filter(part => part)],
 				])

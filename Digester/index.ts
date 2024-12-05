@@ -1,7 +1,6 @@
-import * as Base16 from "../Base16"
-import * as Base64 from "../Base64"
+import { Base16 } from "../Base16"
+import { Base64 } from "../Base64"
 import { crypto } from "../crypto"
-import { TextEncoder } from "../TextEncoder"
 import { Algorithm } from "./Algorithm"
 
 export class Digester {
@@ -27,3 +26,4 @@ export class Digester {
 		"SHA-512": 512,
 	}
 }
+export namespace Digester {}

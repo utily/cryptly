@@ -1,5 +1,5 @@
 import { isly } from "isly"
-import * as Base64 from "../Base64"
+import { Base64 } from "../Base64"
 import { crypto } from "../crypto"
 import { Length as IdentifierLength } from "./Length"
 
@@ -82,8 +82,4 @@ export namespace Identifier {
 	export function previous(identifier: Identifier, decrement = 1): Identifier {
 		return next(identifier, -decrement)
 	}
-	/**
-	 * @deprecated since version 4.0.5
-	 */
-	export const length = Length.values
 }
