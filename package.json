@@ -81,6 +81,7 @@
 		"typescript": "^5.6.2"
 	},
 	"dependencies": {
-		"isly": "^0.1.20"
+		"isly": "^0.1.20",
+		"isoly": "^2.3.11"
 	}
 }

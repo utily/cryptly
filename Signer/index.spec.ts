@@ -14,11 +14,11 @@ const privateKey =
 	"eieQppqI61xxLBVPhKf9l4eaBpVLGwIhAL3xxhKrp1jQiAIhaEmR1Zpft6LPXy5a" +
 	"gQFvTAQYTjgh"
 
-const publicKeyECDSA521 =
+const publicKeyEcdsa521 =
 	"MFYwEAYHKoZIzj0CAQYFK4EEAAoDQgAE5FCaqhKm7af7Jar/qw1ii5ayIMoTOwlD" +
 	"LsKyXQyOio2di2hWvVRpBVs3ESLi85Sk2YqLKUh1JOGW+KQGpcAPTg=="
 
-const privateKeyECDSA521 =
+const privateKeyEcdsa521 =
 	"MHQCAQEEIEGmJObKJLXhUXkWZbdtZ1Whe5WKojkcaDFo6TvaH8JBoAcGBSuBBAAK" +
 	"oUQDQgAE5FCaqhKm7af7Jar/qw1ii5ayIMoTOwlDLsKyXQyOio2di2hWvVRpBVs3" +
 	"ESLi85Sk2YqLKUh1JOGW+KQGpcAPTg=="
@@ -32,7 +32,7 @@ const publicKeyPSS =
 	"V6L11BWkpzGXSW4Hv43qa+GSYOD2QU68Mb59oSk2OB+BtOLpJofmbGEGgvmwyCI9" +
 	"MwIDAQAB"
 
-const privateKeyPSS =
+const privateKeyPss =
 	"MIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQCfPKKzVmN80HRs" +
 	"GAoUxK++RO3CW8GxomrtLnAD6TN5U5WlVbCRZ1WFrizfxcz+lr/Kvjtq/v7PdVOa" +
 	"8NHIAdxpP3bCFEQWku/1yPmVN4lKJvKv8yub9i2MJlVaBo5giHCtfAouo+v/XWKd" +
@@ -89,7 +89,7 @@ describe("Signer", () => {
 		expect(await signer.verify("Some string", signature)).toEqual(true)
 	})
 	it("Create RSA-PSS from private Key", async () => {
-		const signer = Signer.create("RSA-PSS", "SHA-256", publicKeyPSS, privateKeyPSS)
+		const signer = Signer.create("RSA-PSS", "SHA-256", publicKeyPSS, privateKeyPss)
 		const signature = await signer.sign("Some string")
 		expect(await signer.verify("Some string", signature)).toEqual(true)
 	})
@@ -102,7 +102,7 @@ describe("Signer", () => {
 
 	it.skip("Create ECDSA 512", async () => {
 		// does not work currently on Node
-		const signer = Signer.create("ECDSA", "SHA-512", publicKeyECDSA521, privateKeyECDSA521)
+		const signer = Signer.create("ECDSA", "SHA-512", publicKeyEcdsa521, privateKeyEcdsa521)
 		const signature = await signer.sign("Some string")
 		expect(await signer.verify("Some string", signature)).toEqual(true)
 	})
