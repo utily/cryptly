@@ -1,4 +1,5 @@
 import { ArrayBuffer } from "../ArrayBuffer"
+import { Standard as Base64Standard } from "./Standard"
 
 export type Base64 = string
 
@@ -9,7 +10,7 @@ export namespace Base64 {
 		ordered: "-0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz",
 		reversed: "zyxwvutsrqponmlkjihgfedcba_ZYXWVUTSRQPONMLKJIHGFEDCBA9876543210-",
 	}
-	export type Standard = "standard" | "url" | "ordered" | "reversed"
+	export import Standard = Base64Standard
 	export function encode(
 		value: ArrayBuffer | Uint8Array | string | number | bigint,
 		standard: Standard = "standard",
@@ -73,7 +74,7 @@ export namespace Base64 {
 	export function convert(value: Base64, input: Standard, output: Standard): Base64 {
 		const inputTable = tables[input]
 		const outputTable = tables[output]
-		return [...value].map(c => outputTable[inputTable.indexOf(c)]).join()
+		return [...value].map(c => outputTable[inputTable.indexOf(c)]).join("")
 	}
 	function remainder(left: number, right: number): number {
 		return left >= 0 ? left % right : remainder(left + right, right)
