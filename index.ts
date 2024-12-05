@@ -19,7 +19,7 @@ export namespace cryptly {
 	export import Encrypter = cryptlyEncrypter
 	export import Encrypters = cryptlyEncrypters
 	export import Identifier = cryptlyIdentifier
+	export import Otp = cryptlyOtp
 	export import Password = cryptlyPassword
 	export import Signer = cryptlySigner
-	export import Otp = cryptlyOtp
 }
