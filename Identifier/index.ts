@@ -12,6 +12,21 @@ export namespace Identifier {
 		return type.is(value) && (length == undefined || value.length == length)
 	}
 	export const flaw = type.flaw
+	export function convert(identifier: Identifier, length: Length, standard?: Base64.Standard): Identifier
+	export function convert(identifier: Identifier, from: Base64.Standard, to?: Base64.Standard): Identifier
+	export function convert(
+		identifier: Identifier,
+		length: Base64.Standard | Length,
+		standard: Base64.Standard = "url"
+	): Identifier {
+		return Base64.Standard.is(length)
+			? Base64.convert(identifier, length, standard)
+			: identifier.length < length
+			? min(length).slice(0, length - identifier.length) + identifier
+			: identifier.length > length
+			? identifier.slice(identifier.length - length)
+			: identifier
+	}
 	export function fromUint24(value: number): Identifier {
 		return fromHexadecimal(value.toString(16).padStart(6, "0"))
 	}
