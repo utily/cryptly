@@ -3,7 +3,6 @@ import { ArrayBuffer } from "../ArrayBuffer"
 import { Standard as Base64Standard } from "./Standard"
 
 export type Base64 = string
-
 export namespace Base64 {
 	export import Standard = Base64Standard
 	export const type = isly.named<Base64>("cryptly.Base64", isly.string(/^[A-Za-z0-9+/\-_=]*$/))

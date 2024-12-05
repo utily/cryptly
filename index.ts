@@ -6,6 +6,8 @@ import { Digester as cryptlyDigester } from "./Digester"
 import { Encrypter as cryptlyEncrypter } from "./Encrypter"
 import { Encrypters as cryptlyEncrypters } from "./Encrypters"
 import { Identifier as cryptlyIdentifier } from "./Identifier"
+import { Identifier4 as cryptlyIdentifier4 } from "./Identifier4"
+import { Identifier8 as cryptlyIdentifier8 } from "./Identifier8"
 import { Otp as cryptlyOtp } from "./Otp"
 import { Password as cryptlyPassword } from "./Password"
 import { Signer as cryptlySigner } from "./Signer"
@@ -19,6 +21,8 @@ export namespace cryptly {
 	export import Encrypter = cryptlyEncrypter
 	export import Encrypters = cryptlyEncrypters
 	export import Identifier = cryptlyIdentifier
+	export import Identifier4 = cryptlyIdentifier4
+	export import Identifier8 = cryptlyIdentifier8
 	export import Otp = cryptlyOtp
 	export import Password = cryptlyPassword
 	export import Signer = cryptlySigner
