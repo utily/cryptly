@@ -9,4 +9,7 @@ export namespace Length {
 	export const type = isly.named("cryptly.Identifier.Length", isly.number<Length>(values as any as number[]))
 	export const is = type.is
 	export const flaw = type.flaw
+	export function bytes(length: Length): number {
+		return (length / 4) * 3
+	}
 }

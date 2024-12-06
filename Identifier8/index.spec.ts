@@ -1,8 +1,8 @@
 import { cryptly } from "../index"
 
 describe("Identifier8", () => {
-	it("generate is", () => expect(cryptly.Identifier.is(cryptly.Identifier.generate(8))).toBeTruthy())
-	it("generate length", () => expect(cryptly.Identifier.generate(8)).toHaveLength(8))
+	it("generate is", () => expect(cryptly.Identifier8.is(cryptly.Identifier8.generate())).toBeTruthy())
+	it("generate length", () => expect(cryptly.Identifier8.generate()).toHaveLength(8))
 	const data = [
 		{
 			identifier: "abcdabcd",
@@ -58,31 +58,31 @@ describe("Identifier8", () => {
 			value: 50472629954451,
 		},
 	]
-	it.each(data)(`is %s`, ({ identifier }) => expect(cryptly.Identifier.is(identifier, 8)).toBeTruthy())
+	it.each(data)(`is %s`, ({ identifier }) => expect(cryptly.Identifier8.is(identifier)).toBeTruthy())
 	it.each(data)(`toBinary %s`, ({ identifier, binary }) =>
-		expect(cryptly.Identifier.toBinary(identifier)).toEqual(new Uint8Array(binary))
+		expect(cryptly.Identifier8.toBinary(identifier)).toEqual(new Uint8Array(binary))
 	)
 	it.each(data)(`fromBinary %s`, ({ identifier, binary }) =>
-		expect(cryptly.Identifier.fromBinary(new Uint8Array(binary))).toEqual(identifier)
+		expect(cryptly.Identifier8.fromBinary(new Uint8Array(binary))).toEqual(identifier)
 	)
-	it.each(data)(`toHexadecimal %s`, ({ identifier, hexadecimal }) =>
-		expect(cryptly.Identifier.toHexadecimal(identifier)).toEqual(hexadecimal)
+	it.each(data)(`toBase16 %s`, ({ identifier, hexadecimal }) =>
+		expect(cryptly.Identifier8.toBase16(identifier)).toEqual(hexadecimal)
 	)
-	it.each(data)(`fromHexadecimal %s`, ({ identifier, hexadecimal }) =>
-		expect(cryptly.Identifier.fromHexadecimal(hexadecimal)).toEqual(identifier)
+	it.each(data)(`fromBase16 %s`, ({ identifier, hexadecimal }) =>
+		expect(cryptly.Identifier8.fromBase16(hexadecimal)).toEqual(identifier)
 	)
 	it.each(data)(`toUint48 %s`, ({ identifier, value }) =>
-		expect(cryptly.Identifier.toUint48(identifier)).toEqual(value)
+		expect(cryptly.Identifier8.toUint48(identifier)).toEqual(value)
 	)
 	it.each(data)(`fromUint48 %s`, ({ identifier, value }) =>
-		expect(cryptly.Identifier.fromUint48(value)).toEqual(identifier)
+		expect(cryptly.Identifier8.fromUint48(value)).toEqual(identifier)
 	)
-	it.each(["!", "/", "=", "."])("is not $s", c => expect(cryptly.Identifier.is(`Hello${c}01`, 8)).toEqual(false))
+	it.each(["!", "/", "=", "."])("is not $s", c => expect(cryptly.Identifier8.is(`Hello${c}01`)).toEqual(false))
 	it.each([[1691418818480, /^---0XS0e$/]])(`generate ordered w/ prefix %s`, (prefix, result) =>
-		expect(cryptly.Identifier.generate(8, "ordered", prefix)).toMatch(result)
+		expect(cryptly.Identifier8.generate("ordered", prefix)).toMatch(result)
 	)
 	it.each([[1691418818480, /^zzzySXyK$/]])(`generate reversed w/ prefix %s`, (prefix, result) =>
-		expect(cryptly.Identifier.generate(8, "reversed", prefix)).toMatch(result)
+		expect(cryptly.Identifier8.generate("reversed", prefix)).toMatch(result)
 	)
 	const time = 1691418818480
 	it.each([
@@ -93,7 +93,7 @@ describe("Identifier8", () => {
 		[4, 5434],
 	])("order of ordered", (left, right) =>
 		expect(
-			cryptly.Identifier.generate(8, "ordered", time + left) <= cryptly.Identifier.generate(8, "ordered", time + right)
+			cryptly.Identifier8.generate("ordered", time + left) <= cryptly.Identifier8.generate("ordered", time + right)
 		).toEqual(true)
 	)
 	it.each([
@@ -104,8 +104,7 @@ describe("Identifier8", () => {
 		[3, 434],
 	])("order of reversed", (left, right) =>
 		expect(
-			cryptly.Identifier.generate(8, "reversed", time + left) >=
-				cryptly.Identifier.generate(8, "reversed", time + right)
+			cryptly.Identifier8.generate("reversed", time + left) >= cryptly.Identifier8.generate("reversed", time + right)
 		).toEqual(true)
 	)
 })

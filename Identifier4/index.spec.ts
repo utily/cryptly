@@ -1,19 +1,19 @@
 import { cryptly } from "../index"
 
 describe("Identifier4", () => {
-	it("generate is", () => expect(cryptly.Identifier.is(cryptly.Identifier.generate(4), 4)).toEqual(true))
-	it("generate length", () => expect(cryptly.Identifier.generate(4)).toHaveLength(4))
-	it("min", () => expect(cryptly.Identifier.min(4)).toEqual("----"))
-	it("max", () => expect(cryptly.Identifier.max(4)).toEqual("zzzz"))
-	it.each(["ordered", "reversed"] as const)("generate is %s", standard =>
-		expect(cryptly.Identifier.is(cryptly.Identifier.generate(4, standard, ""), 4)).toEqual(true)
+	it("generate is", () => expect(cryptly.Identifier4.is(cryptly.Identifier4.generate())).toEqual(true))
+	it("generate length", () => expect(cryptly.Identifier4.generate()).toHaveLength(4))
+	it("min", () => expect(cryptly.Identifier4.min("ordered")).toEqual("----"))
+	it("max", () => expect(cryptly.Identifier4.max("ordered")).toEqual("zzzz"))
+	it.each(["url", "ordered", "reversed"] as const)("generate is %s", standard =>
+		expect(cryptly.Identifier4.is(cryptly.Identifier4.generate(standard))).toEqual(true)
 	)
 	const data = [
 		{
 			identifier: "abcd",
 			binary: [105, 183, 29],
 			hexadecimal: "69b71d",
-			value: 6928157,
+			value: 6_928_157,
 			ordered: "PQRS",
 			reversed: "_ZYX",
 			next: "PQRT",
@@ -23,7 +23,7 @@ describe("Identifier4", () => {
 			identifier: "test",
 			binary: [181, 235, 45],
 			hexadecimal: "b5eb2d",
-			value: 11922221,
+			value: 11_922_221,
 			ordered: "hTgh",
 			reversed: "HWIH",
 			next: "hTgi",
@@ -33,7 +33,7 @@ describe("Identifier4", () => {
 			identifier: "DEMO",
 			binary: [12, 67, 14],
 			hexadecimal: "0c430e",
-			value: 803598,
+			value: 803_598,
 			ordered: "23BD",
 			reversed: "wvnl",
 			next: "23BE",
@@ -43,7 +43,7 @@ describe("Identifier4", () => {
 			identifier: "TEST",
 			binary: [76, 68, 147],
 			hexadecimal: "4c4493",
-			value: 4998291,
+			value: 4_998_291,
 			ordered: "I3HI",
 			reversed: "gvhg",
 			next: "I3HJ",
@@ -53,7 +53,7 @@ describe("Identifier4", () => {
 			identifier: "____",
 			binary: [255, 255, 255],
 			hexadecimal: "ffffff",
-			value: 16777215,
+			value: 16_777_215,
 			ordered: "zzzz",
 			reversed: "----",
 			next: "----",
@@ -63,7 +63,7 @@ describe("Identifier4", () => {
 			identifier: "zzzz",
 			binary: [207, 60, 243],
 			hexadecimal: "cf3cf3",
-			value: 13581555,
+			value: 13_581_555,
 			ordered: "nnnn",
 			reversed: "BBBB",
 			next: "nnno",
@@ -83,7 +83,7 @@ describe("Identifier4", () => {
 			identifier: "aAzZ",
 			binary: [104, 12, 217],
 			hexadecimal: "680cd9",
-			value: 6819033,
+			value: 6_819_033,
 			ordered: "P-nO",
 			reversed: "_zBa",
 			next: "P-nP",
@@ -93,7 +93,7 @@ describe("Identifier4", () => {
 			identifier: "demo",
 			binary: [117, 233, 168],
 			hexadecimal: "75e9a8",
-			value: 7727528,
+			value: 7_727_528,
 			ordered: "STac",
 			reversed: "XWOM",
 			next: "STad",
@@ -103,7 +103,7 @@ describe("Identifier4", () => {
 			identifier: "GX_K",
 			binary: [25, 127, 202],
 			hexadecimal: "197fca",
-			value: 1671114,
+			value: 1_671_114,
 			ordered: "5Mz9",
 			reversed: "tc-p",
 			next: "5MzA",
@@ -113,7 +113,7 @@ describe("Identifier4", () => {
 			identifier: "GDvT",
 			binary: [24, 59, 211],
 			hexadecimal: "183bd3",
-			value: 1588179,
+			value: 1_588_179,
 			ordered: "52jI",
 			reversed: "twFg",
 			next: "52jJ",
@@ -123,7 +123,7 @@ describe("Identifier4", () => {
 			identifier: "tgAg",
 			binary: [182, 0, 32],
 			hexadecimal: "b60020",
-			value: 11927584,
+			value: 11_927_584,
 			ordered: "hV-V",
 			reversed: "HUzU",
 			next: "hV-W",
@@ -133,7 +133,7 @@ describe("Identifier4", () => {
 			identifier: "LeeT",
 			binary: [45, 231, 147],
 			hexadecimal: "2de793",
-			value: 3008403,
+			value: 3_008_403,
 			ordered: "ATTI",
 			reversed: "oWWg",
 			next: "ATTJ",
@@ -153,60 +153,59 @@ describe("Identifier4", () => {
 			identifier: "___A",
 			binary: [255, 255, 192],
 			hexadecimal: "ffffc0",
-			value: 16777152,
+			value: 16_777_152,
 			ordered: "zzz-",
 			reversed: "---z",
 			next: "zzz0",
 			previous: "zzyz",
 		},
 	]
+	it.each(data)(`is %s`, ({ identifier }) => expect(cryptly.Identifier4.is(identifier)).toBeTruthy())
 	it.each(data)(`toBinary %s`, ({ identifier, binary }) =>
-		expect(cryptly.Identifier.toBinary(identifier)).toEqual(new Uint8Array(binary))
+		expect(cryptly.Identifier4.toBinary(identifier)).toEqual(new Uint8Array(binary))
 	)
 	it.each(data)(`fromBinary %s`, ({ identifier, binary }) =>
-		expect(cryptly.Identifier.fromBinary(new Uint8Array(binary))).toEqual(identifier)
+		expect(cryptly.Identifier4.fromBinary(new Uint8Array(binary))).toEqual(identifier)
 	)
-	it.each(data)(`is %s`, ({ identifier }) => expect(cryptly.Identifier.is(identifier, 4)).toBeTruthy())
-
-	it.each(data)(`toHexadecimal %s`, ({ identifier, hexadecimal }) =>
-		expect(cryptly.Identifier.toHexadecimal(identifier)).toEqual(hexadecimal)
+	it.each(data)(`toBase16 %s`, ({ identifier, hexadecimal }) =>
+		expect(cryptly.Identifier4.toBase16(identifier)).toEqual(hexadecimal)
 	)
-	it.each(data)(`fromHexadecimal %s`, ({ identifier, hexadecimal }) =>
-		expect(cryptly.Identifier.fromHexadecimal(hexadecimal)).toEqual(identifier)
+	it.each(data)(`fromBase16 %s`, ({ identifier, hexadecimal }) =>
+		expect(cryptly.Identifier4.fromBase16(hexadecimal)).toEqual(identifier)
 	)
 	it.each(data)(`toUint24 %s`, ({ identifier, value }) =>
-		expect(cryptly.Identifier.toUint24(identifier)).toEqual(value)
+		expect(cryptly.Identifier4.toUint24(identifier)).toEqual(value)
 	)
 	it.each(data)(`fromUint24 %s`, ({ identifier, value }) =>
-		expect(cryptly.Identifier.fromUint24(value)).toEqual(identifier)
+		expect(cryptly.Identifier4.fromUint24(value)).toEqual(identifier)
 	)
 	it.each(data)(`ordered %s`, ({ identifier, ordered }) =>
-		expect(cryptly.Identifier.convert(identifier, "url", "ordered")).toEqual(ordered)
+		expect(cryptly.Identifier4.convert(identifier, "url", "ordered")).toEqual(ordered)
 	)
 	it.each(data)(`reversed %s`, ({ identifier, reversed }) =>
-		expect(cryptly.Identifier.convert(identifier, "url", "reversed")).toEqual(reversed)
+		expect(cryptly.Identifier4.convert(identifier, "url", "reversed")).toEqual(reversed)
 	)
-	it.each(data)(`next %s`, ({ ordered, next }) => expect(cryptly.Identifier.next(ordered)).toEqual(next))
+	it.each(data)(`next %s`, ({ ordered, next }) => expect(cryptly.Identifier4.next(ordered, "ordered")).toEqual(next))
 	it.each(data)(`previous %s`, ({ ordered, previous }) =>
-		expect(cryptly.Identifier.previous(ordered)).toEqual(previous)
+		expect(cryptly.Identifier4.previous(ordered, "ordered")).toEqual(previous)
 	)
-	it.each(["!", "/", "=", "."])("is not $s", c => expect(cryptly.Identifier.is(`He${c}0`, 4)).toEqual(false))
-	it.each([[1691418818480, /^---0$/]])(`generate ordered w/ prefix %s`, (prefix, result) =>
-		expect(cryptly.Identifier.generate(4, "ordered", prefix)).toMatch(result)
+	it.each(["!", "/", "=", "."])("is not $s", c => expect(cryptly.Identifier4.is(`He${c}0`)).toEqual(false))
+	it.each([
+		["ordered", 1_691_418_818_480, /^---0$/],
+		["reversed", 1_691_418_818_480, /^zzzy$/],
+	] as const)(`generate ordered w/ prefix %s`, (standard, prefix, result) =>
+		expect(cryptly.Identifier4.generate(standard, prefix)).toMatch(result)
 	)
-	it.each([[1691418818480, /^zzzy$/]])(`generate reversed w/ prefix %s`, (prefix, result) =>
-		expect(cryptly.Identifier.generate(4, "reversed", prefix)).toMatch(result)
-	)
-	const time = 1691418818480
+	const time = 1_691_418_818_480
 	it.each([
 		[0, 1],
 		[1, 21111],
 		[2, 344546],
 		[3, 41112],
 		[4, 5434],
-	])("order of ordered", (left, right) =>
+	])("order of ordered %i <= %i", (left, right) =>
 		expect(
-			cryptly.Identifier.generate(4, "ordered", time + left) <= cryptly.Identifier.generate(4, "ordered", time + right)
+			cryptly.Identifier4.generate("ordered", time + left) <= cryptly.Identifier4.generate("ordered", time + right)
 		).toEqual(true)
 	)
 	it.each([
@@ -215,10 +214,9 @@ describe("Identifier4", () => {
 		[1, 21111],
 		[2, 32323],
 		[3, 434],
-	])("order of reversed", (left, right) =>
+	])("order of reversed %i >= %i", (left, right) =>
 		expect(
-			cryptly.Identifier.generate(4, "reversed", time + left) >=
-				cryptly.Identifier.generate(4, "reversed", time + right)
+			cryptly.Identifier4.generate("reversed", time + left) >= cryptly.Identifier4.generate("reversed", time + right)
 		).toEqual(true)
 	)
 })

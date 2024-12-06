@@ -41,6 +41,6 @@ export namespace ArrayBuffer {
 	>(array: T): T
 	export function random(length: number): Uint8Array
 	export function random(array: ArrayBufferView | number): ArrayBufferView {
-		return crypto.getRandomValues(typeof array == "number" ? new Uint8Array(length) : array)
+		return crypto.getRandomValues(typeof array == "number" ? new Uint8Array(array) : array)
 	}
 }
