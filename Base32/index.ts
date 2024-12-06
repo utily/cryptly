@@ -1,13 +1,14 @@
 import { isly } from "isly"
 import { ArrayBuffer } from "../ArrayBuffer"
+import { Standard as Base32Standard } from "./Standard"
 
 export type Base32 = string
 
 export namespace Base32 {
+	export import Standard = Base32Standard
 	export const type = isly.named<Base32>("cryptly.Base32", isly.string(/^[A-Z0-9]*$/))
 	export const is = type.is
 	export const flaw = type.flaw
-	export type Standard = "standard" | "hex" | "crockford"
 	const tables: { [standard in Standard]: string } = {
 		standard: "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567",
 		hex: "0123456789ABCDEFGHIJKLMNOPQRSTUV",
