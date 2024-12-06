@@ -1,11 +1,11 @@
 import { Base16 } from "../Base16"
 import { Base64 } from "../Base64"
 import { crypto } from "../crypto"
-import { Algorithm, Algorithm as DigesterAlgorithm } from "./Algorithm"
+import { Algorithm as DigesterAlgorithm } from "./Algorithm"
 
 export class Digester {
 	get length(): number {
-		return Algorithm.bits(this.algorithm)
+		return Digester.Algorithm.bits(this.algorithm)
 	}
 	constructor(readonly algorithm: Digester.Algorithm) {}
 	async digest(data: string, base: 16): Promise<Base16>
