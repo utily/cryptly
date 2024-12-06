@@ -5,6 +5,7 @@ import { Standard as Base64Standard } from "./Standard"
 export type Base64 = string
 
 export namespace Base64 {
+	export import Standard = Base64Standard
 	export const type = isly.named<Base64>("cryptly.Base64", isly.string(/^[A-Za-z0-9+/\-_=]*$/))
 	export const is = type.is
 	export const flaw = type.flaw
@@ -14,7 +15,6 @@ export namespace Base64 {
 		ordered: "-0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz",
 		reversed: "zyxwvutsrqponmlkjihgfedcba_ZYXWVUTSRQPONMLKJIHGFEDCBA9876543210-",
 	}
-	export import Standard = Base64Standard
 	export function encode(
 		value: ArrayBuffer | Uint8Array | string | number | bigint,
 		standard: Standard = "standard",
