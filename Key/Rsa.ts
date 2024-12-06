@@ -1,4 +1,4 @@
-import * as Base64 from "../Base64"
+import { Base64 } from "../Base64"
 import { crypto } from "../crypto"
 import { Hash } from "../Signer/Hash"
 
@@ -10,12 +10,15 @@ export class Rsa {
 	) {}
 	async export(format: "jwk"): Promise<JsonWebKey | undefined>
 	async export(format: "buffer"): Promise<ArrayBuffer | undefined>
-	async export(format?: "base64" | "pem"): Promise<string | undefined>
-	async export(format: "jwk" | "buffer" | "base64" | "pem"): Promise<JsonWebKey | ArrayBuffer | string | undefined>
+	async export(format?: "pem"): Promise<string | undefined>
+	async export(format?: "base64"): Promise<Base64 | undefined>
+	async export(
+		format: "jwk" | "buffer" | "base64" | "pem"
+	): Promise<JsonWebKey | ArrayBuffer | string | Base64 | undefined>
 	async export(
 		format: "jwk" | "buffer" | "base64" | "pem" = "base64"
-	): Promise<JsonWebKey | ArrayBuffer | string | undefined> {
-		let result: JsonWebKey | ArrayBuffer | string | undefined
+	): Promise<JsonWebKey | ArrayBuffer | string | Base64 | undefined> {
+		let result: JsonWebKey | ArrayBuffer | string | Base64 | undefined
 		switch (format) {
 			case "jwk":
 				result = await crypto.subtle.exportKey("jwk", this.raw)
@@ -36,7 +39,7 @@ export class Rsa {
 						data &&
 						[
 							`-----BEGIN ${this.type.toUpperCase()} KEY-----`,
-							...slice(data, 64),
+							...Base64.slice(data, 64),
 							`-----END ${this.type.toUpperCase()} KEY-----`,
 						].join("\n")
 				}
@@ -46,11 +49,11 @@ export class Rsa {
 	}
 	static async import(
 		type: "private" | "public",
-		key: ArrayBuffer | string | undefined,
+		key: ArrayBuffer | Base64 | undefined,
 		variant?: Rsa.Variant,
 		hash?: Hash
 	): Promise<Rsa | undefined> {
-		if (typeof key == "string")
+		if (Base64.is(key))
 			key = Base64.decode(key)
 		const parameters = getParameters(variant)
 		return (
@@ -93,8 +96,8 @@ export namespace Rsa {
 	}
 	export namespace Pair {
 		export async function load(
-			publicKey: string | ArrayBuffer,
-			privateKey: string | ArrayBuffer
+			publicKey: Base64 | ArrayBuffer,
+			privateKey: Base64 | ArrayBuffer
 		): Promise<Partial<Pair>> {
 			return {
 				public: await Rsa.import("public", publicKey),
@@ -119,9 +122,4 @@ function getParameters(variant: Rsa.Variant | undefined): Rsa.Parameters {
 		: variant == "SSA"
 		? { name: "RSASSA-PKCS1-v1_5" }
 		: { name: "RSA-OAEP" }
-}
-function* slice(data: string, length: number): Generator<string> {
-	let start = 0
-	while (start < data.length)
-		yield data.slice(start, (start = start + length))
 }

@@ -1,15 +1,15 @@
-import * as Base16 from "../Base16"
-import * as Base64 from "../Base64"
+import { Base16 } from "../Base16"
+import { Base64 } from "../Base64"
 import { crypto } from "../crypto"
-import { TextEncoder } from "../TextEncoder"
-import { Algorithm } from "./Algorithm"
+import { Algorithm as DigesterAlgorithm } from "./Algorithm"
 
 export class Digester {
 	get length(): number {
-		return Digester.lengths[this.algorithm]
+		return Digester.Algorithm.bits(this.algorithm)
 	}
-	constructor(readonly algorithm: Algorithm) {}
-	async digest(data: string, base: 16 | Base64.Standard): Promise<string>
+	constructor(readonly algorithm: Digester.Algorithm) {}
+	async digest(data: string, base: 16): Promise<Base16>
+	async digest(data: string, base: Base64.Standard): Promise<Base64>
 	async digest(data: Uint8Array): Promise<Uint8Array>
 	async digest(data: string | Uint8Array, base: 16 | Base64.Standard = "standard"): Promise<string | Uint8Array> {
 		let result: string | Uint8Array
@@ -20,10 +20,7 @@ export class Digester {
 			result = new Uint8Array(await crypto.subtle.digest(this.algorithm, data))
 		return result
 	}
-	private static lengths: Record<Algorithm, number> = {
-		"SHA-1": 128,
-		"SHA-256": 256,
-		"SHA-384": 384,
-		"SHA-512": 512,
-	}
+}
+export namespace Digester {
+	export import Algorithm = DigesterAlgorithm
 }

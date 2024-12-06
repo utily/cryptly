@@ -1,7 +1,5 @@
-import * as Base64 from "../../Base64"
+import { Base64 } from "../../Base64"
 import { crypto } from "../../crypto"
-import { TextDecoder } from "../../TextDecoder"
-import { TextEncoder } from "../../TextEncoder"
 import { Encrypted as AesEncrypted } from "./Encrypted"
 
 export class Aes {
@@ -25,9 +23,9 @@ export class Aes {
 		}
 	}
 	async decrypt(encrypted: AesEncrypted): Promise<string>
-	async decrypt(encrypted: string, salt: string): Promise<string>
-	async decrypt(encrypted: AesEncrypted | string, salt?: string): Promise<string> {
-		if (typeof encrypted == "string")
+	async decrypt(encrypted: Base64, salt: Base64): Promise<string>
+	async decrypt(encrypted: AesEncrypted | Base64, salt?: Base64): Promise<string> {
+		if (Base64.is(encrypted))
 			encrypted = { value: encrypted, salt: salt ?? "" }
 		return new TextDecoder().decode(
 			new Uint8Array(
@@ -39,24 +37,24 @@ export class Aes {
 			)
 		)
 	}
-	async export(): Promise<string>
-	async export(parts: number): Promise<string[]>
-	async export(parts: Uint8Array): Promise<string>
-	async export(parts: Uint8Array[]): Promise<string[]>
-	async export(parts: string): Promise<string>
-	async export(parts: string[]): Promise<string[]>
-	async export(parts?: number | Uint8Array | Uint8Array[] | string | string[]): Promise<string | string[]> {
-		let result: string | string[]
+	async export(): Promise<Base64>
+	async export(parts: number): Promise<Base64[]>
+	async export(parts: Uint8Array): Promise<Base64>
+	async export(parts: Uint8Array[]): Promise<Base64[]>
+	async export(parts: Base64): Promise<Base64>
+	async export(parts: Base64[]): Promise<Base64[]>
+	async export(parts?: number | Uint8Array | Uint8Array[] | Base64 | Base64[]): Promise<Base64 | Base64[]> {
+		let result: Base64 | Base64[]
 		const key = new Uint8Array(await crypto.subtle.exportKey("raw", await this.key))
 		if (parts == undefined)
 			result = (await this.export(1))[0]
 		else if (typeof parts == "number")
 			result = await this.export(parts > 1 ? Aes.generateRandomKeys(key.length, parts - 1) : [])
-		else if (typeof parts == "string")
+		else if (Base64.is(parts))
 			result = await this.export(Base64.decode(parts, "url"))
 		else if (parts instanceof Uint8Array)
 			result = (await this.export([parts]))[0]
-		else if (this.isStringArray(parts))
+		else if (this.isBase64Array(parts))
 			result = await this.export(parts.map(part => Base64.decode(part, "url")))
 		else {
 			parts = [Aes.reduceKeys([key, ...parts]), ...parts]
@@ -64,22 +62,22 @@ export class Aes {
 		}
 		return result
 	}
-	private isStringArray(value: unknown): value is string[] {
-		return Array.isArray(value) && value.length > 0 && value.every((item: any) => typeof item == "string")
+	private isBase64Array(value: unknown): value is Base64[] {
+		return Array.isArray(value) && value.length > 0 && value.every(Base64.is)
 	}
-	static cbc(key: 256 | string | string[]): Aes {
+	static cbc(key: 256 | Base64 | Base64[]): Aes {
 		return Aes.generate("AES-CBC", key)
 	}
-	static gcm(key: 256 | string | string[]): Aes {
+	static gcm(key: 256 | Base64 | Base64[]): Aes {
 		return Aes.generate("AES-GCM", key)
 	}
-	static random(length: 256): string
-	static random(length: 256, parts: number): string[]
-	static random(length: 256, parts?: number): string | string[] {
+	static random(length: 256): Base64
+	static random(length: 256, parts: number): Base64[]
+	static random(length: 256, parts?: number): Base64 | Base64[] {
 		const result = Aes.generateRandomKeys(length / 8, parts && parts > 0 ? parts : 1).map(r => Base64.encode(r, "url"))
 		return parts ? result : result[0]
 	}
-	private static generate(algorithm: "AES-CBC" | "AES-GCM", key: 256 | string | string[]): Aes {
+	private static generate(algorithm: "AES-CBC" | "AES-GCM", key: 256 | Base64 | Base64[]): Aes {
 		return new Aes(
 			typeof key == "number"
 				? crypto.subtle.generateKey({ name: algorithm, length: key }, true, ["encrypt", "decrypt"])

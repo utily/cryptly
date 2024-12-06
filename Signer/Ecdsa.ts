@@ -1,19 +1,19 @@
-import * as Base64 from "../Base64"
+import { Base64 } from "../Base64"
 import { crypto } from "../crypto"
 import { Base } from "./Base"
 import { Hash } from "./Hash"
 
-export class ECDSA extends Base {
+export class Ecdsa extends Base {
 	private publicKey: PromiseLike<CryptoKey>
 	private privateKey: PromiseLike<CryptoKey>
 	constructor(
 		private readonly hash: Hash,
-		publicKey: Uint8Array | string | undefined,
-		privateKey?: Uint8Array | string
+		publicKey: Uint8Array | Base64 | undefined,
+		privateKey?: Uint8Array | Base64
 	) {
 		super()
 		if (publicKey) {
-			if (typeof publicKey == "string")
+			if (Base64.is(publicKey))
 				publicKey = Base64.decode(publicKey)
 			this.publicKey = crypto.subtle.importKey(
 				"spki",
@@ -24,7 +24,7 @@ export class ECDSA extends Base {
 			)
 		}
 		if (privateKey) {
-			if (typeof privateKey == "string")
+			if (Base64.is(privateKey))
 				privateKey = Base64.decode(privateKey)
 			this.privateKey = crypto.subtle.importKey(
 				"pkcs8",

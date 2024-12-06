@@ -12,7 +12,7 @@ describe("Password", () => {
 	})
 	it("verify", async () => {
 		expect(
-			await cryptly.Password.verify(cryptly.Signer.create("HMAC", "SHA-512", "secret-pepper"), hash, "password")
+			await cryptly.Password.verify(cryptly.Signer.create("HMAC", "SHA-512", "secret-pepper"), "password", hash)
 		).toBeTruthy()
 	})
 })

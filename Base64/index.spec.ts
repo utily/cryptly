@@ -1,6 +1,10 @@
-import { cryptly } from "./index"
+import { cryptly } from "../index"
 
 describe("Base64", () => {
+	it.each(["1337", "leet1337", "LEET", "", "0", "----", "-_", "+/="])("is %s", value =>
+		expect(cryptly.Base64.is(value)).toEqual(true)
+	)
+	it.each(["13.37", "1e!et"])("is not %s", value => expect(cryptly.Base64.is(value)).toEqual(false))
 	it("encode standard =", () =>
 		expect(cryptly.Base64.encode("This is the data (*)", "standard", "=")).toEqual("VGhpcyBpcyB0aGUgZGF0YSAoKik="))
 	it("encode standard = 1", () =>
@@ -39,11 +43,11 @@ describe("Base64", () => {
 	it("encode url", () =>
 		expect(cryptly.Base64.encode("This is the data (*)", "url", "")).toEqual("VGhpcyBpcyB0aGUgZGF0YSAoKik"))
 	it("decode url", () =>
-		expect(new cryptly.TextDecoder().decode(cryptly.Base64.decode("VGhpcyBpcyB0aGUgZGF0YSAoKik", "url"))).toEqual(
+		expect(new TextDecoder().decode(cryptly.Base64.decode("VGhpcyBpcyB0aGUgZGF0YSAoKik", "url"))).toEqual(
 			"This is the data (*)"
 		))
 	it("decode standard =", () =>
-		expect(new cryptly.TextDecoder().decode(cryptly.Base64.decode("VGhpcyBpcyB0aGUgZGF0YSAoKik==", "url"))).toEqual(
+		expect(new TextDecoder().decode(cryptly.Base64.decode("VGhpcyBpcyB0aGUgZGF0YSAoKik==", "url"))).toEqual(
 			"This is the data (*)"
 		))
 	it("decode DvT", () => expect(cryptly.Base64.decode("DvQ", "url")).toEqual(Uint8Array.from([14, 244])))

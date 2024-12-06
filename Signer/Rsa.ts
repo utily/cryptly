@@ -1,3 +1,4 @@
+import { Base64 } from "../Base64"
 import { crypto } from "../crypto"
 import { Key } from "../Key"
 import { Base } from "./Base"
@@ -17,19 +18,20 @@ export class Rsa extends Base {
 	}
 	async export(type: "private" | "public", format: "jwk"): Promise<JsonWebKey | undefined>
 	async export(type: "private" | "public", format: "buffer"): Promise<ArrayBuffer | undefined>
-	async export(type: "private" | "public", format?: "base64" | "pem"): Promise<string | undefined>
+	async export(type: "private" | "public", format?: "pem"): Promise<string | undefined>
+	async export(type: "private" | "public", format?: "base64"): Promise<Base64 | undefined>
 	async export(
 		type: "private" | "public",
 		format: "jwk" | "buffer" | "base64" | "pem" = "base64"
-	): Promise<JsonWebKey | ArrayBuffer | string | undefined> {
+	): Promise<JsonWebKey | ArrayBuffer | string | Base64 | undefined> {
 		const key = (await this.keys)[type]
 		return key?.export(format)
 	}
 	static import(
 		variant: Key.Rsa.Variant,
 		hash: Hash,
-		publicKey: Uint8Array | string | undefined,
-		privateKey?: Uint8Array | string
+		publicKey: Uint8Array | Base64 | undefined,
+		privateKey?: Uint8Array | Base64
 	): Rsa {
 		return new Rsa(
 			Promise.all([

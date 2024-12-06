@@ -1,8 +1,9 @@
+import { Base64 } from "../Base64"
 import { Algorithm as SignerAlgorithm } from "./Algorithm"
 import { Base } from "./Base"
-import { ECDSA } from "./ECDSA"
+import { Ecdsa } from "./Ecdsa"
 import { Hash as SignerHash } from "./Hash"
-import { HMAC } from "./HMAC"
+import { Hmac } from "./Hmac"
 import { None } from "./None"
 import { Rsa } from "./Rsa"
 
@@ -32,38 +33,38 @@ export namespace Signer {
 		return result
 	}
 	export function create(algorithm: "None"): Signer
-	export function create(algorithm: "HMAC", hash: SignerHash, key: string | Uint8Array): Signer
-	export function create(algorithm: "RSA", hash: SignerHash, publicKey: string | Uint8Array): Rsa
-	export function create(algorithm: "RSA-PSS", hash: SignerHash, publicKey: string | Uint8Array): Rsa
-	export function create(algorithm: "ECDSA", hash: SignerHash, publicKey: string | Uint8Array): Signer
+	export function create(algorithm: "HMAC", hash: SignerHash, key: Base64 | Uint8Array): Signer
+	export function create(algorithm: "RSA", hash: SignerHash, publicKey: Base64 | Uint8Array): Rsa
+	export function create(algorithm: "RSA-PSS", hash: SignerHash, publicKey: Base64 | Uint8Array): Rsa
+	export function create(algorithm: "ECDSA", hash: SignerHash, publicKey: Base64 | Uint8Array): Signer
 	export function create(
 		algorithm: "RSA",
 		hash: SignerHash,
-		publicKey: string | Uint8Array | undefined,
-		privateKey: string | Uint8Array | undefined
+		publicKey: Base64 | Uint8Array | undefined,
+		privateKey: Base64 | Uint8Array | undefined
 	): Rsa
 	export function create(
 		algorithm: "RSA-PSS",
 		hash: SignerHash,
-		publicKey: string | Uint8Array | undefined,
-		privateKey: string | Uint8Array | undefined
+		publicKey: Base64 | Uint8Array | undefined,
+		privateKey: Base64 | Uint8Array | undefined
 	): Rsa
 	export function create(
 		algorithm: "ECDSA",
 		hash: SignerHash,
-		publicKey: string | Uint8Array | undefined,
-		privateKey: string | Uint8Array | undefined
+		publicKey: Base64 | Uint8Array | undefined,
+		privateKey: Base64 | Uint8Array | undefined
 	): Signer
 	export function create(
 		algorithm: SignerAlgorithm | "None",
 		hash?: SignerHash | undefined,
-		...keys: (string | Uint8Array)[]
+		...keys: (Base64 | Uint8Array)[]
 	): Signer | undefined {
 		let result: Signer | undefined
 		if (hash != undefined)
 			switch (algorithm) {
 				case "HMAC":
-					result = new HMAC(hash, keys[0])
+					result = new Hmac(hash, keys[0])
 					break
 				case "RSA":
 					result = Rsa.import("SSA", hash, keys[0], keys[1])
@@ -72,7 +73,7 @@ export namespace Signer {
 					result = Rsa.import("PSS", hash, keys[0], keys[1])
 					break
 				case "ECDSA":
-					result = new ECDSA(hash, keys[0], keys[1])
+					result = new Ecdsa(hash, keys[0], keys[1])
 					break
 			}
 		else if (algorithm == "None")

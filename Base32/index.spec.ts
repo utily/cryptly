@@ -1,6 +1,8 @@
-import { cryptly } from "./index"
+import { cryptly } from "../index"
 
 describe("Base32", () => {
+	it.each(["1337", "LEET1337", "LEET", "", "0"])("is %s", value => expect(cryptly.Base32.is(value)).toEqual(true))
+	it.each(["13.37", "1eet1337"])("is not %s", value => expect(cryptly.Base32.is(value)).toEqual(false))
 	it("encode standard 1", () =>
 		expect(cryptly.Base32.encode("This is the data (*)")).toEqual("KRUGS4ZANFZSA5DIMUQGIYLUMEQCQKRJ"))
 	it("encode standard 2", () =>
@@ -10,19 +12,19 @@ describe("Base32", () => {
 	it("encode standard 4", () =>
 		expect(cryptly.Base32.encode("any carnal pleasur")).toEqual("MFXHSIDDMFZG4YLMEBYGYZLBON2XE"))
 	it("decode standard 1", () =>
-		expect(new cryptly.TextDecoder().decode(cryptly.Base32.decode("KRUGS4ZANFZSA5DIMUQGIYLUMEQCQKRJ"))).toEqual(
+		expect(new TextDecoder().decode(cryptly.Base32.decode("KRUGS4ZANFZSA5DIMUQGIYLUMEQCQKRJ"))).toEqual(
 			"This is the data (*)"
 		))
 	it("decode standard 2", () =>
-		expect(new cryptly.TextDecoder().decode(cryptly.Base32.decode("MFXHSIDDMFZG4YLMEBYGYZLBON2XEZJO"))).toEqual(
+		expect(new TextDecoder().decode(cryptly.Base32.decode("MFXHSIDDMFZG4YLMEBYGYZLBON2XEZJO"))).toEqual(
 			"any carnal pleasure."
 		))
 	it("decode standard 3", () =>
-		expect(new cryptly.TextDecoder().decode(cryptly.Base32.decode("MFXHSIDDMFZG4YLMEBYGYZLBON2XEZI"))).toEqual(
+		expect(new TextDecoder().decode(cryptly.Base32.decode("MFXHSIDDMFZG4YLMEBYGYZLBON2XEZI"))).toEqual(
 			"any carnal pleasure"
 		))
 	it("decode standard 4", () =>
-		expect(new cryptly.TextDecoder().decode(cryptly.Base32.decode("MFXHSIDDMFZG4YLMEBYGYZLBON2XE"))).toEqual(
+		expect(new TextDecoder().decode(cryptly.Base32.decode("MFXHSIDDMFZG4YLMEBYGYZLBON2XE"))).toEqual(
 			"any carnal pleasur"
 		))
 	it("xor", () =>

@@ -1,6 +1,5 @@
 import { isly } from "isly"
-import * as Base64 from "../Base64"
-import { crypto } from "../crypto"
+import { Base64 } from "../Base64"
 import { Hash as PasswordHash } from "./Hash"
 
 export type Password = string | Password.Hash
@@ -13,26 +12,20 @@ export namespace Password {
 	export async function hash(
 		algorithm: { sign: (data: string) => Promise<string> },
 		password: string,
-		salt?: string
+		salt?: string,
+		pepper = ""
 	): Promise<Hash> {
-		if (!salt)
-			salt = Base64.encode(crypto.getRandomValues(new Uint8Array(64)))
 		return {
-			hash: await algorithm.sign(salt + password),
+			hash: await algorithm.sign(pepper + (salt ??= Base64.random(64)) + password),
 			salt,
 		}
 	}
 	export async function verify(
 		algorithm: { sign: (data: string) => Promise<string> },
+		password: string,
 		hash: Hash,
-		password: string
+		pepper = ""
 	): Promise<boolean> {
-		return (await Password.hash(algorithm, password, hash.salt)).hash == hash.hash
-	}
-	export namespace Hashed {
-		/**
-		 * @deprecated since version 4.0.5
-		 */
-		export const is = Hash.type.is
+		return (await Password.hash(algorithm, password, hash.salt, pepper)).hash == hash.hash
 	}
 }

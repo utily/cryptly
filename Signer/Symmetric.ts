@@ -1,4 +1,4 @@
-import * as Base64 from "../Base64"
+import { Base64 } from "../Base64"
 import { Base } from "./Base"
 
 export abstract class Symmetric extends Base {

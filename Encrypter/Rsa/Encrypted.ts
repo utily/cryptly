@@ -1,13 +1,14 @@
 import { isly } from "isly"
+import { Base64 } from "../../Base64"
 
 export interface Encrypted {
 	key?: string
-	value: string
+	value: Base64
 }
 
 export namespace Encrypted {
 	export const type = isly.object<Encrypted>(
-		{ key: isly.string().optional(), value: isly.string() },
+		{ key: isly.string().optional(), value: Base64.type },
 		"cryptly.Encrypter.Rsa.Encrypted"
 	)
 	export const is = type.is
