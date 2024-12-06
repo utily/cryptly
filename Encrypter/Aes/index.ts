@@ -46,8 +46,7 @@ export class Aes {
 	async export(parts?: number | Uint8Array | Uint8Array[] | Base64 | Base64[]): Promise<Base64 | Base64[]> {
 		let result: Base64 | Base64[]
 		const key = new Uint8Array(await crypto.subtle.exportKey("raw", await this.key))
-		if (parts == undefined)
-			result = (await this.export(1))[0]
+		if (parts == undefined) result = (await this.export(1))[0]
 		else if (typeof parts == "number")
 			result = await this.export(parts > 1 ? Aes.generateRandomKeys(key.length, parts - 1) : [])
 		else if (Base64.is(parts))
@@ -97,8 +96,7 @@ export class Aes {
 	}
 	private static reduceKeys(keys: Uint8Array[]): Uint8Array {
 		const result = new Uint8Array(keys[0].length)
-		for (let index = 0; index < keys[0].length; index++)
-			result[index] = keys.reduce((p, c) => p ^ c[index], 0)
+		for (let index = 0; index < keys[0].length; index++) result[index] = keys.reduce((p, c) => p ^ c[index], 0)
 		return result
 	}
 }
