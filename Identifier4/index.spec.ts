@@ -203,7 +203,7 @@ describe("Identifier4", () => {
 		[2, 344546],
 		[3, 41112],
 		[4, 5434],
-	])("order of ordered", (left, right) =>
+	])("order of ordered %i <= %i", (left, right) =>
 		expect(
 			cryptly.Identifier4.generate("ordered", time + left) <= cryptly.Identifier4.generate("ordered", time + right)
 		).toEqual(true)
@@ -214,7 +214,7 @@ describe("Identifier4", () => {
 		[1, 21111],
 		[2, 32323],
 		[3, 434],
-	])("order of reversed", (left, right) =>
+	])("order of reversed %i >= %i", (left, right) =>
 		expect(
 			cryptly.Identifier4.generate("reversed", time + left) >= cryptly.Identifier4.generate("reversed", time + right)
 		).toEqual(true)
