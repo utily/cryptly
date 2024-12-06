@@ -68,4 +68,8 @@ describe("Base64", () => {
 		expect(
 			cryptly.Base64.combine(["V6h7cyBpcyB0taUgZGF0YSAoK72", "Y4y5IGNhcm5hbCBwbGVhc3VyZ7u8"])
 		).toMatchInlineSnapshot(`"ZJOykrzCrsfCykFfzZKF0JjS4D7z"`))
+	it("next", () =>
+		expect(cryptly.Base64.next("V6h7cyBpcyB0taUgZGF0YSAoK7z", 1, "ordered")).toMatchInlineSnapshot(
+			`"V6h7cyBpcyB0taUgZGF0YSAoK8-"`
+		))
 })
