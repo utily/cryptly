@@ -1,6 +1,8 @@
 import { cryptly } from "../index"
 
 describe("Base32", () => {
+	it.each(["1337", "LEET1337", "LEET", "", "0"])("is %s", value => expect(cryptly.Base32.is(value)).toEqual(true))
+	it.each(["13.37", "1eet1337"])("is not %s", value => expect(cryptly.Base32.is(value)).toEqual(false))
 	it("encode standard 1", () =>
 		expect(cryptly.Base32.encode("This is the data (*)")).toEqual("KRUGS4ZANFZSA5DIMUQGIYLUMEQCQKRJ"))
 	it("encode standard 2", () =>

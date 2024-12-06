@@ -1,3 +1,4 @@
+import { Base64 } from "../Base64"
 import { Algorithm as SignerAlgorithm } from "./Algorithm"
 import { Base } from "./Base"
 import { Ecdsa } from "./Ecdsa"
@@ -32,32 +33,32 @@ export namespace Signer {
 		return result
 	}
 	export function create(algorithm: "None"): Signer
-	export function create(algorithm: "HMAC", hash: SignerHash, key: string | Uint8Array): Signer
-	export function create(algorithm: "RSA", hash: SignerHash, publicKey: string | Uint8Array): Rsa
-	export function create(algorithm: "RSA-PSS", hash: SignerHash, publicKey: string | Uint8Array): Rsa
-	export function create(algorithm: "ECDSA", hash: SignerHash, publicKey: string | Uint8Array): Signer
+	export function create(algorithm: "HMAC", hash: SignerHash, key: Base64 | Uint8Array): Signer
+	export function create(algorithm: "RSA", hash: SignerHash, publicKey: Base64 | Uint8Array): Rsa
+	export function create(algorithm: "RSA-PSS", hash: SignerHash, publicKey: Base64 | Uint8Array): Rsa
+	export function create(algorithm: "ECDSA", hash: SignerHash, publicKey: Base64 | Uint8Array): Signer
 	export function create(
 		algorithm: "RSA",
 		hash: SignerHash,
-		publicKey: string | Uint8Array | undefined,
-		privateKey: string | Uint8Array | undefined
+		publicKey: Base64 | Uint8Array | undefined,
+		privateKey: Base64 | Uint8Array | undefined
 	): Rsa
 	export function create(
 		algorithm: "RSA-PSS",
 		hash: SignerHash,
-		publicKey: string | Uint8Array | undefined,
-		privateKey: string | Uint8Array | undefined
+		publicKey: Base64 | Uint8Array | undefined,
+		privateKey: Base64 | Uint8Array | undefined
 	): Rsa
 	export function create(
 		algorithm: "ECDSA",
 		hash: SignerHash,
-		publicKey: string | Uint8Array | undefined,
-		privateKey: string | Uint8Array | undefined
+		publicKey: Base64 | Uint8Array | undefined,
+		privateKey: Base64 | Uint8Array | undefined
 	): Signer
 	export function create(
 		algorithm: SignerAlgorithm | "None",
 		hash?: SignerHash | undefined,
-		...keys: (string | Uint8Array)[]
+		...keys: (Base64 | Uint8Array)[]
 	): Signer | undefined {
 		let result: Signer | undefined
 		if (hash != undefined)

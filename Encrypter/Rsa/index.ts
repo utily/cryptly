@@ -25,9 +25,9 @@ export class Rsa {
 			: undefined
 	}
 	async decrypt(encrypted: RsaEncrypted): Promise<string | undefined>
-	async decrypt(encrypted: string): Promise<string | undefined>
-	async decrypt(encrypted: RsaEncrypted | string): Promise<string | undefined> {
-		if (typeof encrypted == "string")
+	async decrypt(encrypted: Base64): Promise<string | undefined>
+	async decrypt(encrypted: RsaEncrypted | Base64): Promise<string | undefined> {
+		if (Base64.is(encrypted))
 			encrypted = { value: encrypted }
 		const key = (await this.keys)?.private
 		return key
@@ -38,11 +38,11 @@ export class Rsa {
 			  )
 			: undefined
 	}
-	async export(type: "private" | "public"): Promise<string | undefined>
-	async export(): Promise<{ public: string | undefined; private: string | undefined }>
+	async export(type: "private" | "public"): Promise<Base64 | undefined>
+	async export(): Promise<{ public: Base64 | undefined; private: Base64 | undefined }>
 	async export(
 		type?: "private" | "public"
-	): Promise<string | undefined | { public: string | undefined; private: string | undefined }> {
+	): Promise<Base64 | undefined | { public: Base64 | undefined; private: Base64 | undefined }> {
 		return type
 			? (await this.keys)[type]?.export()
 			: Object.fromEntries(
@@ -52,9 +52,9 @@ export class Rsa {
 	static generate(key: 1024 | 2048 | 4096): Rsa {
 		return new Rsa(Key.Rsa.generate(key))
 	}
-	static import(type: "public" | "private", key: string | ArrayBuffer): Rsa
-	static import(publicKey: string | ArrayBuffer, privateKey: string | ArrayBuffer): Rsa
-	static import(type: "public" | "private" | string | ArrayBuffer, key: string | ArrayBuffer): Rsa {
+	static import(type: "public" | "private", key: Base64 | ArrayBuffer): Rsa
+	static import(publicKey: Base64 | ArrayBuffer, privateKey: Base64 | ArrayBuffer): Rsa
+	static import(type: "public" | "private" | Base64 | ArrayBuffer, key: Base64 | ArrayBuffer): Rsa {
 		return new Rsa(
 			type == "public" || type == "private"
 				? Key.Rsa.import(type, key).then(result => ({ [type]: result }))

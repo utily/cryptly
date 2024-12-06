@@ -8,7 +8,8 @@ export class Digester {
 		return Algorithm.bits(this.algorithm)
 	}
 	constructor(readonly algorithm: Digester.Algorithm) {}
-	async digest(data: string, base: 16 | Base64.Standard): Promise<string>
+	async digest(data: string, base: 16): Promise<Base16>
+	async digest(data: string, base: Base64.Standard): Promise<Base64>
 	async digest(data: Uint8Array): Promise<Uint8Array>
 	async digest(data: string | Uint8Array, base: 16 | Base64.Standard = "standard"): Promise<string | Uint8Array> {
 		let result: string | Uint8Array

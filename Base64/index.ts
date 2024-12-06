@@ -1,9 +1,13 @@
+import { isly } from "isly"
 import { ArrayBuffer } from "../ArrayBuffer"
 import { Standard as Base64Standard } from "./Standard"
 
 export type Base64 = string
 
 export namespace Base64 {
+	export const type = isly.named<Base64>("cryptly.Base64", isly.string(/^[A-Za-z0-9+/\-_=]*$/))
+	export const is = type.is
+	export const flaw = type.flaw
 	const tables: { [standard in Standard]: string } = {
 		standard: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/",
 		url: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_",
@@ -93,5 +97,10 @@ export namespace Base64 {
 	}
 	export function random(length: number): Base64 {
 		return Base64.encode(ArrayBuffer.random(Math.ceil(length * (3 / 4)))).substring(0, length)
+	}
+	export function* slice(data: Base64, length: number): Generator<Base64> {
+		let start = 0
+		while (start < data.length)
+			yield data.slice(start, (start = start + length))
 	}
 }

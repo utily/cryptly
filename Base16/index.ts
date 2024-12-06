@@ -1,8 +1,12 @@
+import { isly } from "isly"
 import { ArrayBuffer } from "../ArrayBuffer"
 
 export type Base16 = string
 
 export namespace Base16 {
+	export const type = isly.named<Base16>("cryptly.Base16", isly.string(/^[A-Fa-f0-9]*$/))
+	export const is = type.is
+	export const flaw = type.flaw
 	export function encode(value: ArrayBuffer | Uint8Array | string, length?: number): Base16 {
 		const data =
 			typeof value == "string"

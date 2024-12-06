@@ -1,3 +1,4 @@
+import { Base64 } from "../Base64"
 import { Encrypter } from "../Encrypter"
 
 export type Encrypters = Record<string, Encrypter.Aes> & { current: Encrypter.Aes }
@@ -6,9 +7,9 @@ export namespace Encrypters {
 	export function create(
 		create: (keys: string[]) => Encrypter.Aes,
 		current: string,
-		...secrets: string[] | Record<string, any>[]
+		...secrets: Base64[] | Record<Base64, any>[]
 	): Encrypters {
-		const [first, ...remainder] = isStringArray(secrets)
+		const [first, ...remainder] = isBase64Array(secrets)
 			? secrets.map(part =>
 					Object.fromEntries(part.split(",").map(secret => secret.split(":", 2).map(item => item.trim())))
 			  )
@@ -16,7 +17,7 @@ export namespace Encrypters {
 		const result = Object.assign(
 			{},
 			...Object.entries(first)
-				.map<[string, string[]]>(([name, secret]) => [
+				.map<[Base64, Base64[]]>(([name, secret]) => [
 					name,
 					[secret, ...remainder.map(part => part[name]).filter(part => part)],
 				])
@@ -30,6 +31,6 @@ export namespace Encrypters {
 	}
 }
 
-function isStringArray(value: string[] | any): value is string[] {
+function isBase64Array(value: Base64[] | any): value is Base64[] {
 	return Array.isArray(value) && value.length > 0 && typeof value[0] == "string"
 }
