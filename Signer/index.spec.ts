@@ -67,7 +67,7 @@ describe("Signer", () => {
 		expect(await signer.verify("Some string", signature)).toEqual(true)
 	})
 	it("Create HMAC", async () => {
-		const signer = Signer.create("HMAC", "SHA-256", "Super Secret Encryption Key")
+		const signer = Signer.create("HMAC", "SHA-256", "Super-Secret-Encryption-Key")
 		const signature = await signer.sign("Some string")
 		expect(await signer.verify("Some string", signature)).toEqual(true)
 	})

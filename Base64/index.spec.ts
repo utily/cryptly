@@ -1,7 +1,7 @@
 import { cryptly } from "../index"
 
 describe("Base64", () => {
-	it.each(["1337", "leet1337", "LEET", "", "0", "----", "-_"])("is %s", value =>
+	it.each(["1337", "leet1337", "LEET", "", "0", "----", "-_", "+/="])("is %s", value =>
 		expect(cryptly.Base64.is(value)).toEqual(true)
 	)
 	it.each(["13.37", "1e!et"])("is not %s", value => expect(cryptly.Base64.is(value)).toEqual(false))
