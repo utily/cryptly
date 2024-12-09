@@ -22,8 +22,7 @@ export namespace Password {
 	export async function verify(
 		algorithm: { sign: (data: string) => Promise<string> },
 		password: string,
-		hash: Hash,
-		pepper = ""
+		hash: Hash
 	): Promise<boolean> {
 		return (await Password.hash(algorithm, password, hash.salt)).hash == hash.hash
 	}
