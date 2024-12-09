@@ -12,11 +12,10 @@ export namespace Password {
 	export async function hash(
 		algorithm: { sign: (data: string) => Promise<string> },
 		password: string,
-		salt?: string,
-		pepper = ""
+		salt?: string
 	): Promise<Hash> {
 		return {
-			hash: await algorithm.sign(pepper + (salt ??= Base64.random(64)) + password),
+			hash: await algorithm.sign((salt ??= Base64.random(64)) + password),
 			salt,
 		}
 	}
@@ -26,6 +25,6 @@ export namespace Password {
 		hash: Hash,
 		pepper = ""
 	): Promise<boolean> {
-		return (await Password.hash(algorithm, password, hash.salt, pepper)).hash == hash.hash
+		return (await Password.hash(algorithm, password, hash.salt)).hash == hash.hash
 	}
 }
