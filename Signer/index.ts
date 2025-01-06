@@ -58,13 +58,13 @@ export namespace Signer {
 	export function create(
 		algorithm: SignerAlgorithm | "None",
 		hash?: SignerHash | undefined,
-		...keys: (Base64 | Uint8Array)[]
+		...keys: (Base64 | Uint8Array | undefined)[]
 	): Signer | undefined {
 		let result: Signer | undefined
 		if (hash != undefined)
 			switch (algorithm) {
 				case "HMAC":
-					result = new Hmac(hash, keys[0])
+					result = keys[0] == undefined ? keys[0] : new Hmac(hash, keys[0])
 					break
 				case "RSA":
 					result = Rsa.import("SSA", hash, keys[0], keys[1])

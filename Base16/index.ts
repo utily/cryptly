@@ -26,7 +26,7 @@ export namespace Base16 {
 			value += "0"
 		const result = new Uint8Array(value.length / 2)
 		for (let index = 0; index < result.length; index++)
-			result[index] = Number.parseInt(value[index * 2], 16) * 16 + Number.parseInt(value[index * 2 + 1], 16)
+			result[index] = Number.parseInt(value[index * 2]!, 16) * 16 + Number.parseInt(value[index * 2 + 1]!, 16) // index is always in bounds due to the loop
 		return result
 	}
 	export function xor(data: Base16[]): Base16 {

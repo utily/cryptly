@@ -38,13 +38,14 @@ export namespace Base64 {
 		const table = tables[standard]
 		const result: string[] = []
 		for (let c = 0; c < data.length; c += 3) {
-			const c0 = data[c]
-			const c1 = c + 1 < data.length ? data[c + 1] : 0
-			const c2 = c + 2 < data.length ? data[c + 2] : 0
-			result.push(table[c0 >>> 2])
-			result.push(table[((c0 & 3) << 4) | (c1 >>> 4)])
-			result.push(table[((c1 & 15) << 2) | (c2 >>> 6)])
-			result.push(table[c2 & 63])
+			const c0 = data[c]! // data[c] is always defined as checked by the loop
+			const c1 = c + 1 < data.length ? data[c + 1]! : 0 // data[c + 1] is checked in the expression
+			const c2 = c + 2 < data.length ? data[c + 2]! : 0 // data[c + 1] is checked in the expression
+			// table contains all values from 0 to 63
+			result.push(table[c0 >>> 2]!)
+			result.push(table[((c0 & 3) << 4) | (c1 >>> 4)]!)
+			result.push(table[((c1 & 15) << 2) | (c2 >>> 6)]!)
+			result.push(table[c2 & 63]!)
 		}
 		const length = Math.ceil((data.length / 3) * 4)
 		return result.join("").substring(0, length) + padding.repeat(result.length - length)
@@ -68,8 +69,8 @@ export namespace Base64 {
 	}
 	export function next(value: Base64, increment = 1, standard: Standard = "standard"): Base64 {
 		const table = tables[standard]
-		const rest = value.length > 1 ? value.substring(0, value.length - 1) : increment > 0 ? "" : table[63]
-		const number = (value.length == 0 ? 0 : table.indexOf(value[value.length - 1])) + increment
+		const rest = value.length > 1 ? value.substring(0, value.length - 1) : increment > 0 ? "" : table[63]! // all tables are 64 characters long
+		const number = (value.length == 0 ? 0 : table.indexOf(value[value.length - 1]!)) + increment // guaranteed to be in the last value
 		return (
 			(number > 63 || number < 0 ? next(rest, Math.floor(number / 63), standard) : rest) + table[remainder(number, 64)]
 		)
