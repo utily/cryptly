@@ -39,7 +39,7 @@ export namespace Base32 {
 		let value = 0
 		let result = ""
 		for (let i = 0; i < data.length; i++) {
-			value = (value << 8) | data[i]
+			value = (value << 8) | data[i]! // data[i] is always defined as checked by the loop
 			bits += 8
 			while (bits >= 5) {
 				result += table[(value >>> (bits - 5)) & 31]
@@ -61,7 +61,7 @@ export namespace Base32 {
 		let value = 0
 		let index = 0
 		for (let i = 0; i < input.length; i++) {
-			value = (value << 5) | table.indexOf(input[i])
+			value = (value << 5) | table.indexOf(input[i]!) // input[i] is always defined as checked by the loop
 			bits += 5
 			if (bits >= 8) {
 				result[index++] = (value >>> (bits - 8)) & 255

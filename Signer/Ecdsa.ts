@@ -4,8 +4,8 @@ import { Base } from "./Base"
 import { Hash } from "./Hash"
 
 export class Ecdsa extends Base {
-	private publicKey: PromiseLike<CryptoKey>
-	private privateKey: PromiseLike<CryptoKey>
+	private publicKey: PromiseLike<CryptoKey> | undefined
+	private privateKey: PromiseLike<CryptoKey> | undefined
 	constructor(
 		private readonly hash: Hash,
 		publicKey: Uint8Array | Base64 | undefined,
@@ -37,10 +37,15 @@ export class Ecdsa extends Base {
 	}
 	protected async signBinary(data: Uint8Array): Promise<Uint8Array> {
 		return new Uint8Array(
-			await crypto.subtle.sign({ name: "ECDSA", hash: { name: this.hash } }, await this.privateKey, data)
+			this.privateKey
+				? await crypto.subtle.sign({ name: "ECDSA", hash: { name: this.hash } }, await this.privateKey, data)
+				: new ArrayBuffer(0)
 		)
 	}
 	protected async verifyBinary(data: Uint8Array, signature: Uint8Array): Promise<boolean> {
-		return crypto.subtle.verify({ name: "ECDSA", hash: { name: this.hash } }, await this.publicKey, signature, data)
+		return (
+			!!this.publicKey &&
+			crypto.subtle.verify({ name: "ECDSA", hash: { name: this.hash } }, await this.publicKey, signature, data)
+		)
 	}
 }

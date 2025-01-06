@@ -4,7 +4,7 @@ export namespace ArrayBuffer {
 		for (const d of data.map(d => new Uint8Array(d))) {
 			const offset = result.length - d.length
 			result = result.reduceRight(
-				(r, value, index) => ((r[index] = index < offset ? value : reducer(value, d[index - offset])), r),
+				(r, value, index) => ((r[index] = index < offset ? value : reducer(value, d[index - offset]!)), r), // index is always in bounds due to arithmetic
 				result
 			)
 		}

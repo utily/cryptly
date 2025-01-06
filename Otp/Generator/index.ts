@@ -31,12 +31,12 @@ export class Generator {
 			)
 		else {
 			const hash = await this.signer.sign(Base16.decode(counter.toString(16).padStart(16, "0")))
-			const offset = hash[hash.length - 1] & 0xf
+			const offset = hash[hash.length - 1]! & 0xf // element has to exists by definition of has.length
 			const value =
-				((hash[offset] & 0x7f) << 24) |
-				((hash[offset + 1] & 0xff) << 16) |
-				((hash[offset + 2] & 0xff) << 8) |
-				(hash[offset + 3] & 0xff)
+				((hash[offset]! & 0x7f) << 24) | // offset is significantly smaller than hash.length due to the mask
+				((hash[offset + 1]! & 0xff) << 16) |
+				((hash[offset + 2]! & 0xff) << 8) |
+				(hash[offset + 3]! & 0xff)
 			// magic numbers explanation:
 			// (value % 10^digits).padstart(digits, "0")
 			result = (value % +"1".padEnd(this.settings.length + 1, "0")).toString().padStart(this.settings.length, "0")
