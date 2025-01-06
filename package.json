@@ -1,6 +1,6 @@
 {
 	"name": "cryptly",
-	"version": "6.0.2",
+	"version": "6.0.3",
 	"description": "Fullstack encryption library.",
 	"author": "Utily Contributors",
 	"license": "MIT",
@@ -57,7 +57,7 @@
 		"typescript": "^5.7.2",
 		"vitest": "^2.1.8"
 	},
-		"dependencies": {
+	"dependencies": {
 		"isly": "^0.1.26",
 		"isoly": "^3.0.2"
 	}
