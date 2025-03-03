@@ -16,12 +16,12 @@
 	"exports": {
 		".": {
 			"import": {
-				"default": "./dist/mjs/index.js",
-				"types": "./dist/types/index.d.ts"
+				"types": "./dist/types/index.d.ts",
+				"default": "./dist/mjs/index.js"
 			},
 			"require": {
-				"default": "./dist/cjs/index.js",
-				"types": "./dist/types/index.d.ts"
+				"types": "./dist/types/index.d.ts",
+				"default": "./dist/cjs/index.js"
 			}
 		}
 	},
@@ -46,16 +46,17 @@
 		"verify": "npm run build && npm run test && npm run lint && npm audit"
 	},
 	"devDependencies": {
+		"@types/node": "^22.13.8",
 		"@typescript-eslint/eslint-plugin": "8.19.0",
 		"@typescript-eslint/parser": "8.19.0",
-		"@vitest/coverage-istanbul": "^2.1.8",
+		"@vitest/coverage-istanbul": "^3.0.7",
 		"eslint": "^8.57.1",
 		"eslint-plugin-prettierx": "github:utily/eslint-plugin-prettierx#utily-20231004",
 		"eslint-plugin-simple-import-sort": "^12.1.1",
 		"prettierx": "github:utily/prettierx#utily-20231004",
 		"rimraf": "^6.0.1",
 		"typescript": "^5.7.2",
-		"vitest": "^2.1.8"
+		"vitest": "^3.0.7"
 	},
 	"dependencies": {
 		"isly": "^0.1.26",
