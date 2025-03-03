@@ -42,7 +42,8 @@
 		"**/*.spec.ts",
 	],
 	"files": [
-		"index.ts"
+		"index.ts",
+		"crypto.browser.ts"
 	],
 	"typeAcquisition": {
 		"enable": true
