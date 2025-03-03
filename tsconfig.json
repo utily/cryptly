@@ -35,7 +35,8 @@
 		"forceConsistentCasingInFileNames": true,
 		"baseUrl": ".",
 		"types": [
-			"vitest/globals"
+			"vitest/globals",
+			"node"
 		]
 	},
 	"include": [
@@ -43,7 +44,7 @@
 	],
 	"files": [
 		"index.ts",
-		"crypto.browser.ts"
+		"crypto.browser.ts",
 	],
 	"typeAcquisition": {
 		"enable": true
