@@ -1,5 +1,4 @@
 import { Base64 } from "../Base64"
-import { crypto } from "../crypto"
 import { Hash } from "../Signer/Hash"
 
 export class Rsa {
@@ -21,10 +20,10 @@ export class Rsa {
 		let result: JsonWebKey | ArrayBuffer | string | Base64 | undefined
 		switch (format) {
 			case "jwk":
-				result = await crypto.subtle.exportKey("jwk", this.raw)
+				result = await globalThis.crypto.subtle.exportKey("jwk", this.raw)
 				break
 			case "buffer":
-				result = await crypto.subtle.exportKey(this.type == "private" ? "pkcs8" : "spki", this.raw)
+				result = await globalThis.crypto.subtle.exportKey(this.type == "private" ? "pkcs8" : "spki", this.raw)
 				break
 			case "base64":
 				{
@@ -60,7 +59,7 @@ export class Rsa {
 			key &&
 			new Rsa(
 				type,
-				await crypto.subtle.importKey(
+				await globalThis.crypto.subtle.importKey(
 					type == "private" ? "pkcs8" : "spki",
 					key,
 					{ name: parameters.name, hash: { name: hash ?? "SHA-256" } },
@@ -73,7 +72,7 @@ export class Rsa {
 	}
 	static async generate(length: 1024 | 2048 | 4096, variant?: Rsa.Variant, hash?: Hash): Promise<Rsa.Pair> {
 		const parameters = getParameters(variant)
-		const keyPair = await crypto.subtle.generateKey(
+		const keyPair = await globalThis.crypto.subtle.generateKey(
 			{
 				name: parameters.name,
 				modulusLength: length,

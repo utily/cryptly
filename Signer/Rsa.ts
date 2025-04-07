@@ -1,5 +1,4 @@
 import { Base64 } from "../Base64"
-import { crypto } from "../crypto"
 import { Key } from "../Key"
 import { Base } from "./Base"
 import { Hash } from "./Hash"
@@ -10,11 +9,11 @@ export class Rsa extends Base {
 	}
 	protected async signBinary(data: Uint8Array): Promise<Uint8Array> {
 		const key = (await this.keys).private
-		return key ? new Uint8Array(await crypto.subtle.sign(key.parameters, key.raw, data)) : new Uint8Array(0)
+		return key ? new Uint8Array(await globalThis.crypto.subtle.sign(key.parameters, key.raw, data)) : new Uint8Array(0)
 	}
 	protected async verifyBinary(data: Uint8Array, signature: Uint8Array): Promise<boolean> {
 		const key = (await this.keys).public
-		return !!key && crypto.subtle.verify(key.parameters, key.raw, signature, data)
+		return !!key && globalThis.crypto.subtle.verify(key.parameters, key.raw, signature, data)
 	}
 	async export(type: "private" | "public", format: "jwk"): Promise<JsonWebKey | undefined>
 	async export(type: "private" | "public", format: "buffer"): Promise<ArrayBuffer | undefined>

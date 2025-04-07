@@ -1,13 +1,12 @@
 import { isly } from "isly"
 import { Base64 } from "../../Base64"
-import { crypto } from "../../crypto"
 import { Encrypted as AesEncrypted } from "./Encrypted"
 
 export class Aes {
 	public name?: string
 	private constructor(private readonly key: PromiseLike<CryptoKey>) {}
 	async encrypt(data: string | ArrayBuffer, salt?: string): Promise<AesEncrypted> {
-		const iv = salt ? Base64.decode(salt, "url") : crypto.getRandomValues(new Uint8Array(16))
+		const iv = salt ? Base64.decode(salt, "url") : globalThis.crypto.getRandomValues(new Uint8Array(16))
 		return {
 			key: this.name,
 			salt: salt || Base64.encode(iv, "url"),
@@ -30,7 +29,7 @@ export class Aes {
 			encrypted = { value: encrypted, salt: salt ?? "" }
 		return new TextDecoder().decode(
 			new Uint8Array(
-				await crypto.subtle.decrypt(
+				await globalThis.crypto.subtle.decrypt(
 					{ name: (await this.key).algorithm.name, iv: Base64.decode(encrypted.salt, "url") },
 					await this.key,
 					Base64.decode(encrypted.value, "url")
@@ -57,7 +56,7 @@ export class Aes {
 	async export(parts: Base64[]): Promise<Base64[]>
 	async export(parts?: number | Uint8Array | Uint8Array[] | Base64 | Base64[]): Promise<Base64 | Base64[]> {
 		let result: Base64 | Base64[]
-		const key = new Uint8Array(await crypto.subtle.exportKey("raw", await this.key))
+		const key = new Uint8Array(await globalThis.crypto.subtle.exportKey("raw", await this.key))
 		if (parts == undefined)
 			result = (await this.export(1))[0]
 		else if (typeof parts == "number")
@@ -93,8 +92,8 @@ export class Aes {
 	private static generate(algorithm: "AES-CBC" | "AES-GCM", key: 256 | Base64 | Base64[]): Aes {
 		return new Aes(
 			typeof key == "number"
-				? crypto.subtle.generateKey({ name: algorithm, length: key }, true, ["encrypt", "decrypt"])
-				: crypto.subtle.importKey(
+				? globalThis.crypto.subtle.generateKey({ name: algorithm, length: key }, true, ["encrypt", "decrypt"])
+				: globalThis.crypto.subtle.importKey(
 						"raw",
 						Array.isArray(key) ? Aes.reduceKeys(key.map(k => Base64.decode(k, "url"))) : Base64.decode(key, "url"),
 						algorithm,
@@ -114,7 +113,7 @@ export class Aes {
 	private static generateRandomKeys(length: number, parts: number): Uint8Array[]
 	private static generateRandomKeys(length: number, parts: number): Uint8Array[] {
 		return parts > 0
-			? [crypto.getRandomValues(new Uint8Array(length)), ...this.generateRandomKeys(length, parts - 1)]
+			? [globalThis.crypto.getRandomValues(new Uint8Array(length)), ...this.generateRandomKeys(length, parts - 1)]
 			: []
 	}
 	private static reduceKeys(keys: Uint8Array[]): Uint8Array {

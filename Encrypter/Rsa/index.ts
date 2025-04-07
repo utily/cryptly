@@ -1,5 +1,4 @@
 import { Base64 } from "../../Base64"
-import { crypto } from "../../crypto"
 import { Key } from "../../Key"
 import { Encrypted as RsaEncrypted } from "./Encrypted"
 
@@ -13,7 +12,7 @@ export class Rsa {
 					key: this.name,
 					value: Base64.encode(
 						new Uint8Array(
-							await crypto.subtle.encrypt(
+							await globalThis.crypto.subtle.encrypt(
 								{ name: key.parameters.name },
 								key.raw,
 								typeof data == "string" ? new TextEncoder().encode(data) : data
@@ -33,7 +32,11 @@ export class Rsa {
 		return key
 			? new TextDecoder().decode(
 					new Uint8Array(
-						await crypto.subtle.decrypt({ name: key.parameters.name }, key.raw, Base64.decode(encrypted.value, "url"))
+						await globalThis.crypto.subtle.decrypt(
+							{ name: key.parameters.name },
+							key.raw,
+							Base64.decode(encrypted.value, "url")
+						)
 					)
 			  )
 			: undefined

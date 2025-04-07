@@ -1,6 +1,5 @@
 import { Base16 } from "../Base16"
 import { Base64 } from "../Base64"
-import { crypto } from "../crypto"
 import { Algorithm as DigesterAlgorithm } from "./Algorithm"
 
 export class Digester {
