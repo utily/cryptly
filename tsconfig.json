@@ -43,7 +43,6 @@
 	],
 	"files": [
 		"index.ts",
-		"crypto.browser.ts",
 	],
 	"typeAcquisition": {
 		"enable": true

@@ -1,4 +1,1 @@
-/// <reference types="node" />
-import * as C from "crypto"
-
-export const crypto = C.webcrypto as Crypto
+export const crypto = globalThis.crypto
